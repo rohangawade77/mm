@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warehouse — GROCERY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('grc-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/logo.svg">
+<script>
+  /* Fulfilment lives in the ERP (Deliveries) now that orders are real invoices. */
+  (function () {
+    var base = localStorage.getItem('grc-erp-base') || 'http://localhost:3007';
+    location.replace(base + '/deliveries');
+  })();
+</script>
+</head>
+<body class="app-page">
+
+<header class="app-bar">
+  <a class="logo app-logo" href="warehouse.html" data-logo></a>
+  <span class="role-chip warehouse" id="roleChip">WAREHOUSE</span>
+  <div class="app-bar-right">
+    <button class="btn btn-ghost" id="refreshBtn">↻ Refresh</button>
+    <button class="btn btn-primary" id="logoutBtn">Sign out</button>
+  </div>
+</header>
+
+<main class="app-main solo" id="whMain"></main>
+
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+
+<script src="store.js"></script>
+<script src="docs.js"></script>
+<script src="warehouse.js"></script>
+</body>
+</html>

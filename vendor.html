@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Trade Account — GROCERY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('grc-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/logo.svg">
+</head>
+<body class="app-page">
+
+<header class="app-bar">
+  <a class="logo app-logo" href="index.html" data-logo></a>
+  <span class="role-chip" id="roleChip">VENDOR</span>
+  <div class="app-bar-right">
+    <a class="btn btn-ghost" href="orderpad.html">⚡ Quick order</a>
+    <a class="btn btn-ghost" href="index.html#catalogue">Browse products</a>
+    <button class="btn btn-primary" id="logoutBtn">Sign out</button>
+  </div>
+</header>
+
+<main class="app-main solo" id="vendorMain"></main>
+
+<div class="toasts" id="toasts"></div>
+<script src="store.js"></script>
+<script src="docs.js"></script>
+<script src="vendor.js"></script>
+</body>
+</html>

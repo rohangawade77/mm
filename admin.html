@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — GROCERY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('grc-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/logo.svg">
+<script>
+  /* The Warehouse ERP is the admin system now. Anyone landing here is sent
+     across rather than shown a panel whose data has moved. */
+  (function () {
+    var base = localStorage.getItem('grc-erp-base') || 'http://localhost:3007';
+    location.replace(base);
+  })();
+</script>
+</head>
+<body class="app-page">
+
+<header class="app-bar">
+  <a class="logo app-logo" href="index.html" data-logo></a>
+  <span class="role-chip admin">ADMIN</span>
+  <div class="app-bar-right">
+    <a class="btn btn-ghost" href="index.html">View store</a>
+    <button class="btn btn-primary" id="logoutBtn">Sign out</button>
+  </div>
+</header>
+
+<div class="app-shell">
+  <nav class="side-nav" id="sideNav">
+    <button class="side-link active" data-view="dashboard"><span>📊</span> Dashboard</button>
+    <button class="side-link" data-view="analytics"><span>📈</span> Analytics</button>
+    <button class="side-link" data-view="applications"><span>📨</span> Applications <b class="pill" id="pendingPill">0</b></button>
+    <button class="side-link" data-view="vendors"><span>🏪</span> Customers</button>
+    <button class="side-link" data-view="orders"><span>📦</span> Orders</button>
+    <button class="side-link" data-view="products"><span>🧺</span> Products</button>
+    <button class="side-link" data-view="tiers"><span>🏷️</span> Pricing</button>
+    <button class="side-link" data-view="settings"><span>⚙️</span> Settings</button>
+    <div class="side-sep"></div>
+    <a class="side-link" href="warehouse.html"><span>🏭</span> Warehouse</a>
+  </nav>
+
+  <main class="app-main" id="appMain"></main>
+</div>
+
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+
+<script src="store.js"></script>
+<script src="sheet.js"></script>
+<script src="docs.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

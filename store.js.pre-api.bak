@@ -1,0 +1,582 @@
+/* ==========================================================
+   GROCERY — shared data layer + UI helpers
+
+   Products, categories and tier pricing come live from the Warehouse ERP.
+   Accounts, the basket and the theme stay in this browser.
+   ========================================================== */
+
+/** Where the ERP serves the read-only catalogue from. */
+const ERP_BASE = localStorage.getItem("grc-erp-base") || "http://localhost:3007";
+const CATALOGUE_URL = `${ERP_BASE}/api/shop/catalogue`;
+
+/* Filled by loadCatalogue() before any page renders. Everything downstream
+   reads this synchronously, so the rest of the app is unchanged. */
+let CATALOGUE = {
+  loaded: false,
+  error: null,
+  company: "GROCERY",
+  tierMarkup: { A: 5, B: 10, C: 15 },
+  categories: [],
+  items: [],
+};
+
+/** Maps an ERP catalogue row onto the shape the storefront already expects. */
+function fromErp(row) {
+  return {
+    id: row.id,
+    sku: row.sku,
+    name: row.name,
+    brand: row.category,
+    cat: row.category,
+    unit: row.unitsPerCase > 1 ? `Case of ${row.unitsPerCase}` : "Single",
+    unitsPerCase: row.unitsPerCase,
+    stock: row.stockCases,
+    barcode: row.barcode || "",
+    size: row.size || "",
+    priced: row.priced,
+    tierCasePence: row.tierCasePence,
+    img: null,
+    emoji: "\u{1F4E6}",
+    desc: [row.size, row.category].filter(Boolean).join(" \u00b7 "),
+    flags: [],
+  };
+}
+
+/**
+ * Pulls the catalogue from the ERP. Called once by each page before render.
+ * If the ERP is not running the storefront says so rather than showing an
+ * empty shop, because an empty shop looks like "we sell nothing".
+ */
+async function loadCatalogue() {
+  try {
+    const res = await fetch(CATALOGUE_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error(`ERP returned ${res.status}`);
+    const data = await res.json();
+    CATALOGUE = {
+      loaded: true,
+      error: null,
+      company: data.company,
+      tierMarkup: data.tierMarkup,
+      categories: data.categories.map((c) => c.name),
+      items: data.items.map(fromErp),
+    };
+  } catch (err) {
+    CATALOGUE = { ...CATALOGUE, loaded: false, error: String(err.message || err) };
+  }
+  return CATALOGUE;
+}
+
+const ORDER_STATUSES = ["received","packing","packed","partial","dispatched","delivered"];
+const WAREHOUSE_STATUSES = ["packing","packed","dispatched"];
+
+/* ---------------- STAFF LOGINS ---------------- */
+const ADMIN_USER     = { email:"admin@grocery.com",     pass:"admin@123", name:"Store Admin" };
+const WAREHOUSE_USER = { email:"warehouse@grocery.com", pass:"pack@123",  name:"Warehouse Team" };
+
+/* ---------------- PERSISTENCE ---------------- */
+const DB_KEY = "grc-db-v1", SESSION_KEY = "grc-session";
+/* Data saved under the previous branding is migrated across on first load
+   rather than discarded, so existing products and orders survive the rename. */
+const LEGACY_DB_KEYS = ["azf-db-v3", "azf-db-v2", "azf-db-v1"];
+
+function migrateBranding(db) {
+  const swap = t => String(t ?? "")
+    .replace(/AtoZ Fresh/g, "GROCERY")
+    .replace(/atozfresh\.com/g, "grocery.com")
+    .replace(/\bAZF-/g, "GRC-")
+    .replace(/\bAZ-(\d{4})\b/g, "GR-$1");
+  if (db.settings?.company) {
+    db.settings.company.name = swap(db.settings.company.name);
+    db.settings.company.email = swap(db.settings.company.email);
+  }
+  (db.vendors || []).forEach(v => { v.password = swap(v.password); });
+  (db.orders || []).forEach(o => {
+    o.id = swap(o.id);
+    (o.lines || []).forEach(l => { l.name = swap(l.name); });
+  });
+  return db;
+}
+
+const DEFAULT_DB = {
+  tiers: {
+    A: { label:"Tier A — Platinum", discount:30, note:"Top-volume national accounts" },
+    B: { label:"Tier B — Gold",     discount:20, note:"Established multi-store retailers" },
+    C: { label:"Tier C — Silver",   discount:10, note:"Independent single-store retailers" },
+  },
+  settings: {
+    company: {
+      name:"GROCERY Ltd", address:"Unit 14, Trade Park, Leicester LE4 9HR",
+      email:"trade@grocery.com", phone:"+44 (0) 000 000 000",
+      vat:"GB 123 4567 89", reg:"12345678",
+    },
+  },
+  vendors: [
+    { id:"V-1001", name:"Amrit Singh", shop:"Singh's Superstore Ltd",  email:"amrit@singhs.co.uk",  phone:"+44 7700 900123", status:"approved", tier:"A", password:"GR-4821", createdAt:"2026-06-14T09:20:00Z", approvedAt:"2026-06-15T11:02:00Z", notes:"", overrides:{}, address:"22 High Street, Belfast BT1 2AB" },
+    { id:"V-1002", name:"Priya Patel", shop:"Patel Bros Cash & Carry", email:"priya@patelbros.com", phone:"+44 7700 900456", status:"approved", tier:"B", password:"GR-7734", createdAt:"2026-06-28T14:05:00Z", approvedAt:"2026-06-29T08:41:00Z", notes:"", overrides:{}, address:"5 Belgrave Road, Leicester LE4 6AS" },
+    { id:"V-1003", name:"Rajan Mehta", shop:"Mehta Convenience",       email:"rajan@mehtastore.uk", phone:"+44 7700 900789", status:"pending",  tier:null, password:null, createdAt:"2026-07-29T16:38:00Z", approvedAt:null, notes:"", overrides:{}, address:"" },
+    { id:"V-1004", name:"Sana Iqbal",  shop:"Fresh Corner Halal Mart", email:"sana@freshcorner.ie", phone:"+353 87 123 4567", status:"pending", tier:null, password:null, createdAt:"2026-07-30T10:12:00Z", approvedAt:null, notes:"", overrides:{}, address:"" },
+  ],
+  orders: [],
+  seq: { vendor:1004, order:1000, invoice:5000 },
+};
+
+function dbLoad() {
+  try {
+    let raw = localStorage.getItem(DB_KEY);
+    if (!raw) {
+      const legacyKey = LEGACY_DB_KEYS.find(k => localStorage.getItem(k));
+      if (legacyKey) {
+        const migrated = migrateBranding(JSON.parse(localStorage.getItem(legacyKey)));
+        localStorage.setItem(DB_KEY, JSON.stringify(migrated));
+        localStorage.removeItem(legacyKey);
+        raw = localStorage.getItem(DB_KEY);
+      } else {
+        localStorage.setItem(DB_KEY, JSON.stringify(DEFAULT_DB));
+        return structuredClone(DEFAULT_DB);
+      }
+    }
+    const saved = JSON.parse(raw);
+    const base = structuredClone(DEFAULT_DB);
+    return { ...base, ...saved, settings:{ ...base.settings, ...(saved.settings || {}) } };
+  } catch { return structuredClone(DEFAULT_DB); }
+}
+function dbSave(db) {
+  try { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+  catch (e) {
+    // Quota is the realistic failure here once product images pile up.
+    if (String(e.name).includes("Quota")) {
+      toast("Storage full — remove some product images before saving more.", "⚠️");
+      throw new Error("Storage quota exceeded. Delete some product images and try again.");
+    }
+    throw e;
+  }
+}
+function dbUpdate(fn) { const db = dbLoad(); fn(db); dbSave(db); return db; }
+function resetDemoData() { localStorage.removeItem(DB_KEY); }
+const getSettings = () => dbLoad().settings;
+function saveSettings(patch) { dbUpdate(db => { db.settings = { ...db.settings, ...patch }; }); }
+
+/* Rough size of the stored database, for the storage meter in admin. */
+function storageUsed() {
+  const bytes = new Blob([localStorage.getItem(DB_KEY) || ""]).size;
+  return { bytes, mb: bytes / 1048576, pct: Math.min(100, bytes / (5 * 1048576) * 100) };
+}
+
+/* ---------------- PRODUCTS ---------------- */
+function getProducts() { return CATALOGUE.items; }
+function getProduct(id) { return CATALOGUE.items.find(p => String(p.id) === String(id)); }
+function findByBarcode(code) {
+  const c = String(code).trim();
+  return CATALOGUE.items.find(p => p.barcode && String(p.barcode).trim() === c);
+}
+
+function getCategories() {
+  return [{ name: "All" }, ...CATALOGUE.categories.map(n => ({ name: n }))];
+}
+
+/* ---------------- VENDOR ACCOUNTS ---------------- */
+function registerVendor({ name, shop, email, phone }) {
+  const db = dbLoad();
+  if (db.vendors.some(v => v.email.toLowerCase() === email.toLowerCase()))
+    return { ok:false, error:"An application already exists for this email address." };
+  db.seq.vendor += 1;
+  const vendor = { id:"V-" + db.seq.vendor, name, shop, email, phone, status:"pending", tier:null,
+    password:null, createdAt:new Date().toISOString(), approvedAt:null, notes:"", overrides:{}, address:"" };
+  db.vendors.push(vendor);
+  dbSave(db);
+  return { ok:true, vendor };
+}
+function genPassword() { return "GR-" + Math.floor(1000 + Math.random() * 9000); }
+function getVendor(id) { return dbLoad().vendors.find(v => v.id === id); }
+function approveVendor(id, tier) {
+  let out = null;
+  dbUpdate(db => {
+    const v = db.vendors.find(v => v.id === id);
+    if (!v) return;
+    v.status = "approved"; v.tier = tier;
+    v.password = v.password || genPassword();
+    v.approvedAt = new Date().toISOString();
+    out = v;
+  });
+  return out;
+}
+function rejectVendor(id) { dbUpdate(db => { const v = db.vendors.find(v => v.id === id); if (v) { v.status = "rejected"; v.tier = null; } }); }
+function setVendorTier(id, tier) { dbUpdate(db => { const v = db.vendors.find(v => v.id === id); if (v) v.tier = tier; }); }
+function suspendVendor(id) { dbUpdate(db => { const v = db.vendors.find(v => v.id === id); if (v) v.status = "suspended"; }); }
+function reinstateVendor(id) { dbUpdate(db => { const v = db.vendors.find(v => v.id === id); if (v) v.status = "approved"; }); }
+function setTierDiscount(tier, pct) { dbUpdate(db => { db.tiers[tier].discount = Math.max(0, Math.min(90, pct)); }); }
+function updateVendor(id, patch) { dbUpdate(db => { const v = db.vendors.find(v => v.id === id); if (v) Object.assign(v, patch); }); }
+
+/* per-customer fixed prices, keyed by product id */
+function setOverride(vendorId, productId, price) {
+  dbUpdate(db => {
+    const v = db.vendors.find(v => v.id === vendorId);
+    if (!v) return;
+    v.overrides ||= {};
+    if (price === null || price === "" || isNaN(price)) delete v.overrides[productId];
+    else v.overrides[productId] = Math.max(0, Number(price));
+  });
+}
+function vendorOverride(vendor, productId) {
+  const o = vendor?.overrides?.[productId];
+  return o === undefined ? null : Number(o);
+}
+
+/* ---------------- SESSION / AUTH ---------------- */
+function getSession() { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY) || "null"); } catch { return null; } }
+function setSession(s, remember) { (remember ? localStorage : sessionStorage).setItem(SESSION_KEY, JSON.stringify(s)); }
+function logout() { sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(SESSION_KEY); }
+
+function loginVendor(email, password, remember) {
+  const v = dbLoad().vendors.find(v => v.email.toLowerCase() === email.trim().toLowerCase());
+  if (!v) return { ok:false, error:"No account found for that email address." };
+  if (v.status === "pending")   return { ok:false, error:"Your application is still under review. We'll email you once it's approved." };
+  if (v.status === "rejected")  return { ok:false, error:"This application was not approved. Please contact our trade team." };
+  if (v.status === "suspended") return { ok:false, error:"This account is suspended. Please contact your account manager." };
+  if (v.password !== password.trim()) return { ok:false, error:"Incorrect trade password." };
+  setSession({ role:"vendor", id:v.id }, remember);
+  return { ok:true, vendor:v };
+}
+function loginAdmin(email, password, remember) {
+  if (email.trim().toLowerCase() !== ADMIN_USER.email || password.trim() !== ADMIN_USER.pass)
+    return { ok:false, error:"Invalid admin credentials." };
+  setSession({ role:"admin", id:"admin" }, remember);
+  return { ok:true };
+}
+function loginWarehouse(email, password, remember) {
+  if (email.trim().toLowerCase() !== WAREHOUSE_USER.email || password.trim() !== WAREHOUSE_USER.pass)
+    return { ok:false, error:"Invalid warehouse credentials." };
+  setSession({ role:"warehouse", id:"warehouse" }, remember);
+  return { ok:true };
+}
+
+function currentVendor() {
+  const s = getSession();
+  if (!s || s.role !== "vendor") return null;
+  const v = dbLoad().vendors.find(v => v.id === s.id);
+  return v && v.status === "approved" ? v : null;
+}
+function isAdmin() { const s = getSession(); return !!s && s.role === "admin"; }
+function isWarehouse() { const s = getSession(); return !!s && s.role === "warehouse"; }
+function requireAdmin() { if (!isAdmin()) location.href = "login.html#admin"; }
+/* Admins can open the warehouse screen directly — no second login. */
+function requireWarehouseAccess() { if (!isWarehouse() && !isAdmin()) location.href = "login.html#warehouse"; }
+function requireVendor() { if (!currentVendor()) location.href = "login.html"; }
+
+/* ---------------- PRICING ---------------- */
+const money = n => "£" + Number(n).toFixed(2);
+
+/** Extra % earned by the quantity on a single line. */
+
+/**
+ * Trade pricing. The ERP has already worked out a finished case price for
+ * every tier from cost plus that tier's markup, so there is nothing to
+ * calculate here — and no cost price in the browser to leak.
+ */
+function priceFor(product, vendor = currentVendor()) {
+  if (!vendor || !product) return null;
+  const pence = product.tierCasePence?.[vendor.tier];
+  if (pence === undefined || !product.priced) return null;
+  return { net: pence / 100, priced: true };
+}
+
+/* ---------------- CART ---------------- */
+function cartKey() { const v = currentVendor(); return v ? `grc-cart-${v.id}` : "grc-cart-guest"; }
+function getCart() { try { return JSON.parse(localStorage.getItem(cartKey()) || "{}"); } catch { return {}; } }
+function saveCart(c) { localStorage.setItem(cartKey(), JSON.stringify(c)); }
+function cartLines() {
+  const c = getCart(), products = getProducts();
+  return Object.entries(c).map(([id, q]) => ({ p: products.find(p => String(p.id) === String(id)), q })).filter(l => l.p);
+}
+function cartCount() { return cartLines().reduce((s, l) => s + l.q, 0); }
+function cartTotals(vendor = currentVendor()) {
+  const lines = cartLines().map(l => ({ ...l, pr: priceFor(l.p, vendor) }));
+  const net = lines.reduce((s, l) => s + (l.pr ? l.pr.net : 0) * l.q, 0);
+  return { net, lines };
+}
+/** Cases of a product that can still be added, given what's already in the cart. */
+function availableToAdd(product) { return Math.max(0, product.stock - (getCart()[product.id] || 0)); }
+
+/* ---------------- ORDERS ---------------- */
+function placeOrder(note = "") {
+  const v = currentVendor();
+  if (!v) return { ok:false, error:"Sign in to place an order." };
+  const t = cartTotals(v);
+  if (!t.lines.length) return { ok:false, error:"Your order is empty." };
+  const short = t.lines.filter(l => l.q > l.p.stock);
+  if (short.length) return { ok:false, error:`Not enough stock for ${short[0].p.name} (${short[0].p.stock} left).` };
+
+  let order = null;
+  dbUpdate(db => {
+    db.seq.order += 1; db.seq.invoice += 1;
+    order = {
+      id: "GRC-" + db.seq.order, invoiceNo: "INV-" + db.seq.invoice,
+      vendorId: v.id, vendorShop: v.shop, vendorName: v.name, vendorPhone: v.phone,
+      vendorEmail: v.email, vendorAddress: v.address || "", tier: v.tier,
+      lines: t.lines.map(l => ({ id:l.p.id, name:l.p.name, unit:l.p.unit, emoji:l.p.emoji, img:l.p.img,
+        barcode:l.p.barcode, qty:l.q, sent:l.q, list:l.p.list, net:l.pr.net,
+        tierPct:l.pr.tierPct, volPct:l.pr.volPct, override:l.pr.override })),
+      gross: t.gross, discountPct: t.pct, discount: t.discount, net: t.net,
+      note, status:"received", placedAt:new Date().toISOString(),
+      history:[{ status:"received", at:new Date().toISOString(), by:"system" }],
+    };
+    db.orders.unshift(order);
+    // Stock is the ERP's record, not ours — it moves when the order reaches it.
+  });
+  saveCart({});
+  return { ok:true, order };
+}
+
+function recalcOrder(o) {
+  o.gross = o.lines.reduce((s, l) => s + l.list * l.qty, 0);
+  o.net = o.lines.reduce((s, l) => s + l.net * l.qty, 0);
+  o.discount = o.gross - o.net;
+  o.discountPct = o.gross ? Math.round(o.discount / o.gross * 100) : 0;
+}
+
+/** Admin edit of line quantities; returns stock to the shelf for any reduction. */
+function updateOrderLines(orderId, qtyById, by = "admin") {
+  dbUpdate(db => {
+    const o = db.orders.find(o => o.id === orderId);
+    if (!o) return;
+    o.lines.forEach(l => {
+      const next = Math.max(0, parseInt(qtyById[l.id] ?? l.qty, 10) || 0);
+      const delta = next - l.qty;
+      l.qty = next;
+      l.sent = Math.min(l.sent ?? next, next);
+    });
+    o.lines = o.lines.filter(l => l.qty > 0);
+    recalcOrder(o);
+    (o.history ||= []).push({ status:"edited", at:new Date().toISOString(), by });
+  });
+}
+
+/** Dispatch some of each line; anything outstanding keeps the order open. */
+function dispatchPartial(orderId, sentById, by = "admin") {
+  let outcome = null;
+  dbUpdate(db => {
+    const o = db.orders.find(o => o.id === orderId);
+    if (!o) return;
+    o.lines.forEach(l => { l.sent = Math.max(0, Math.min(l.qty, parseInt(sentById[l.id] ?? l.qty, 10) || 0)); });
+    const outstanding = o.lines.reduce((s, l) => s + (l.qty - l.sent), 0);
+    o.status = outstanding > 0 ? "partial" : "dispatched";
+    (o.history ||= []).push({ status:o.status, at:new Date().toISOString(), by,
+      note: outstanding > 0 ? `${outstanding} cases outstanding` : "" });
+    outcome = { outstanding, status:o.status };
+  });
+  return outcome;
+}
+
+function setOrderStatus(id, status, by = "admin") {
+  dbUpdate(db => {
+    const o = db.orders.find(o => o.id === id);
+    if (!o) return;
+    o.status = status;
+    if (status === "dispatched") o.lines.forEach(l => l.sent = l.qty);
+    (o.history ||= []).push({ status, at:new Date().toISOString(), by });
+  });
+}
+function getOrders() { return dbLoad().orders; }
+function getOrder(id) { return dbLoad().orders.find(o => o.id === id); }
+function ordersFor(vendorId) { return dbLoad().orders.filter(o => o.vendorId === vendorId); }
+
+/** Load a past order's lines back into the cart (capped at what's in stock). */
+function reorder(orderId) {
+  const o = getOrder(orderId);
+  if (!o) return { ok:false, error:"Order not found." };
+  const cart = getCart();
+  const skipped = [];
+  o.lines.forEach(l => {
+    const p = getProduct(l.id);
+    if (!p) { skipped.push(`${l.name} (no longer stocked)`); return; }
+    const room = Math.max(0, p.stock - (cart[p.id] || 0));
+    if (room <= 0) { skipped.push(`${p.name} (out of stock)`); return; }
+    const add = Math.min(l.qty, room);
+    cart[p.id] = (cart[p.id] || 0) + add;
+    if (add < l.qty) skipped.push(`${p.name} (only ${add} of ${l.qty} available)`);
+  });
+  saveCart(cart);
+  return { ok:true, skipped };
+}
+
+/* ---------------- ANALYTICS ---------------- */
+function salesSummary(days = 30) {
+  const since = Date.now() - days * 864e5;
+  const orders = getOrders().filter(o => new Date(o.placedAt).getTime() >= since);
+  const revenue = orders.reduce((s, o) => s + o.net, 0);
+  const cases = orders.reduce((s, o) => s + o.lines.reduce((a, l) => a + l.qty, 0), 0);
+
+  const byDay = {};
+  orders.forEach(o => {
+    const k = new Date(o.placedAt).toISOString().slice(0, 10);
+    byDay[k] = (byDay[k] || 0) + o.net;
+  });
+  const series = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const k = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
+    series.push({ date:k, value: byDay[k] || 0 });
+  }
+
+  const prod = {}, cust = {}, tier = {};
+  orders.forEach(o => {
+    tier[o.tier] = (tier[o.tier] || 0) + o.net;
+    cust[o.vendorId] ||= { shop:o.vendorShop, tier:o.tier, revenue:0, orders:0 };
+    cust[o.vendorId].revenue += o.net; cust[o.vendorId].orders++;
+    o.lines.forEach(l => {
+      prod[l.id] ||= { name:l.name, emoji:l.emoji, img:l.img, cases:0, revenue:0 };
+      prod[l.id].cases += l.qty; prod[l.id].revenue += l.net * l.qty;
+    });
+  });
+  return {
+    orders, revenue, cases, series,
+    avgOrder: orders.length ? revenue / orders.length : 0,
+    topProducts: Object.values(prod).sort((a, b) => b.revenue - a.revenue).slice(0, 8),
+    topCustomers: Object.values(cust).sort((a, b) => b.revenue - a.revenue).slice(0, 8),
+    byTier: ["A","B","C"].map(k => ({ tier:k, revenue: tier[k] || 0 })),
+  };
+}
+
+/* ---------------- SORTING ---------------- */
+function sortRows(rows, key, dir = "asc", getters = {}) {
+  const get = getters[key] || (r => r[key]);
+  const sign = dir === "desc" ? -1 : 1;
+  return [...rows].sort((a, b) => {
+    const x = get(a), y = get(b);
+    if (x == null && y == null) return 0;
+    if (x == null) return 1;
+    if (y == null) return -1;
+    if (typeof x === "number" && typeof y === "number") return (x - y) * sign;
+    return String(x).localeCompare(String(y), undefined, { numeric:true }) * sign;
+  });
+}
+
+/* ---------------- CSV EXPORT ---------------- */
+function toCSV(headers, rows) {
+  const cell = v => {
+    const s = v == null ? "" : String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return [headers.map(cell).join(","), ...rows.map(r => r.map(cell).join(","))].join("\r\n");
+}
+function downloadFile(filename, content, mime = "text/csv;charset=utf-8") {
+  const blob = new Blob([mime.startsWith("text/csv") ? "﻿" + content : content], { type:mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+const stamp = () => new Date().toISOString().slice(0, 10);
+
+function exportVendorsCSV(rows = dbLoad().vendors) {
+  const tiers = dbLoad().tiers, orders = dbLoad().orders;
+  const csv = toCSV(
+    ["Account ID","Business","Contact","Email","Phone","Address","Status","Tier","Discount %","Orders","Total spend","Trade password","Applied","Approved"],
+    rows.map(v => {
+      const mine = orders.filter(o => o.vendorId === v.id);
+      return [v.id, v.shop, v.name, v.email, v.phone, v.address || "", v.status, v.tier || "",
+        v.tier ? tiers[v.tier].discount : "", mine.length, mine.reduce((s, o) => s + o.net, 0).toFixed(2),
+        v.password || "", v.createdAt ? new Date(v.createdAt).toLocaleString("en-GB") : "",
+        v.approvedAt ? new Date(v.approvedAt).toLocaleString("en-GB") : ""];
+    }));
+  downloadFile(`grocery-customers-${stamp()}.csv`, csv);
+}
+function exportOrdersCSV(rows = dbLoad().orders) {
+  const csv = toCSV(
+    ["Order","Invoice","Placed","Business","Account ID","Tier","Cases ordered","Cases sent","Lines","List total","Discount %","Discount","Net total","Status"],
+    rows.map(o => [o.id, o.invoiceNo || "", new Date(o.placedAt).toLocaleString("en-GB"), o.vendorShop, o.vendorId, o.tier,
+      o.lines.reduce((s, l) => s + l.qty, 0), o.lines.reduce((s, l) => s + (l.sent ?? l.qty), 0), o.lines.length,
+      o.gross.toFixed(2), o.discountPct, o.discount.toFixed(2), o.net.toFixed(2), o.status]));
+  downloadFile(`grocery-orders-${stamp()}.csv`, csv);
+}
+function exportOrderLinesCSV(rows = dbLoad().orders) {
+  const out = [];
+  rows.forEach(o => o.lines.forEach(l => out.push([o.id, new Date(o.placedAt).toLocaleDateString("en-GB"),
+    o.vendorShop, l.name, l.barcode || "", l.unit, l.qty, l.sent ?? l.qty, l.list.toFixed(2),
+    l.net.toFixed(2), (l.net * l.qty).toFixed(2), o.status])));
+  downloadFile(`grocery-order-lines-${stamp()}.csv`,
+    toCSV(["Order","Placed","Business","Product","Barcode","Pack","Qty ordered","Qty sent","List price","Unit price","Line total","Status"], out));
+}
+
+/* ---------------- SHARED UI ---------------- */
+const LOGO_SVG = `
+<svg class="logo-svg" viewBox="0 0 264 72" role="img" aria-label="GROCERY">
+  <defs>
+    <linearGradient id="gMark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10b981"/><stop offset="60%" stop-color="#059669"/><stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="6" width="60" height="60" rx="16" fill="url(#gMark)"/>
+  <path d="M26 31.5c0-5.6 3.6-9.6 8-9.6s8 4 8 9.6" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M19 33.5h30l-3.3 16.6a3.4 3.4 0 0 1-3.3 2.7H25.6a3.4 3.4 0 0 1-3.3-2.7z" fill="#fff"/>
+  <path d="M29.6 39.2v8.2M38.4 39.2v8.2" stroke="#059669" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="78" y="43" font-family="'Space Grotesk',system-ui,sans-serif" font-size="27" font-weight="700" fill="currentColor" letter-spacing="0.4">GROCERY</text>
+  <text x="79" y="57" font-family="Inter,system-ui,sans-serif" font-size="8" font-weight="600" fill="#8d9d96" letter-spacing="2.6">WHOLESALE · B2B ONLY</text>
+</svg>`;
+
+function mountLogos() { document.querySelectorAll("[data-logo]").forEach(el => el.innerHTML = LOGO_SVG); mountThemeToggle(); }
+
+/* ---------------- THEME ----------------
+   Defaults to the operating system preference until the user picks
+   explicitly; the choice is then remembered across pages and sessions. */
+const THEME_KEY = "grc-theme";
+const systemTheme = () => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+const activeTheme = () => localStorage.getItem(THEME_KEY) || systemTheme();
+
+function setTheme(t) {
+  localStorage.setItem(THEME_KEY, t);
+  document.documentElement.dataset.theme = t;
+  paintThemeToggles();
+}
+function toggleTheme() {
+  const next = activeTheme() === "dark" ? "light" : "dark";
+  setTheme(next);
+  toast(next === "dark" ? "Dark theme on" : "Light theme on", next === "dark" ? "🌙" : "☀️");
+}
+function paintThemeToggles() {
+  const dark = activeTheme() === "dark";
+  document.querySelectorAll(".theme-btn").forEach(b => {
+    b.innerHTML = dark ? "☀️" : "🌙";
+    b.title = dark ? "Switch to light theme" : "Switch to dark theme";
+    b.setAttribute("aria-label", b.title);
+  });
+}
+/** Drops a toggle into whichever header this page happens to have. */
+function mountThemeToggle() {
+  document.documentElement.dataset.theme = activeTheme();
+  [".nav-actions", ".app-bar-right", ".auth-wrap"].forEach(sel => {
+    document.querySelectorAll(sel).forEach(host => {
+      if (host.querySelector(".theme-btn")) return;
+      const b = document.createElement("button");
+      b.className = "icon-btn theme-btn" + (sel === ".auth-wrap" ? " floating" : "");
+      b.onclick = toggleTheme;
+      sel === ".auth-wrap" ? host.prepend(b) : host.prepend(b);
+    });
+  });
+  paintThemeToggles();
+}
+// Follow the OS while the user hasn't chosen for themselves.
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+  if (!localStorage.getItem(THEME_KEY)) { document.documentElement.dataset.theme = systemTheme(); paintThemeToggles(); }
+});
+
+/** Product thumbnail: uploaded image when present, emoji otherwise. */
+function productMedia(p, cls = "") {
+  return p.img
+    ? `<img class="p-img ${cls}" src="${p.img}" alt="${esc(p.name)}" loading="lazy">`
+    : `<span class="${cls}">${p.emoji || "📦"}</span>`;
+}
+
+function toast(msg, icon = "✅") {
+  let wrap = document.getElementById("toasts");
+  if (!wrap) { wrap = document.createElement("div"); wrap.id = "toasts"; wrap.className = "toasts"; document.body.appendChild(wrap); }
+  const t = document.createElement("div");
+  t.className = "toast";
+  t.innerHTML = `<span>${icon}</span> ${msg}`;
+  wrap.appendChild(t);
+  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 350); }, 2600);
+}
+
+const fmtDate = iso => new Date(iso).toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+const fmtDateTime = iso => new Date(iso).toLocaleString("en-GB", { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" });
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));

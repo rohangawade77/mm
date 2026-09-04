@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GROCERY — Wholesale B2B Food &amp; FMCG Supply</title>
+<meta name="description" content="GROCERY — B2B wholesale supplier of Indian groceries, snacks, beverages and personal care. Trade accounts only. Apply for wholesale pricing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('grc-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/logo.svg">
+</head>
+<body>
+
+<div class="announce">
+  <div class="announce-track">
+    <span>🔒 TRADE ACCOUNT REQUIRED TO VIEW PRICING</span><span>✦</span>
+    <span>🚚 FREE DELIVERY ACROSS UK &amp; IRELAND</span><span>✦</span>
+    <span>✅ 100% CERTIFIED PRODUCTS GUARANTEE</span><span>✦</span>
+    <span>⚡ 48 HOUR DISPATCH ON STOCKED LINES</span><span>✦</span>
+    <span>🔒 TRADE ACCOUNT REQUIRED TO VIEW PRICING</span><span>✦</span>
+    <span>🚚 FREE DELIVERY ACROSS UK &amp; IRELAND</span><span>✦</span>
+    <span>✅ 100% CERTIFIED PRODUCTS GUARANTEE</span><span>✦</span>
+    <span>⚡ 48 HOUR DISPATCH ON STOCKED LINES</span><span>✦</span>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <a class="logo" href="#top" data-logo></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#top" class="active">Home</a>
+      <a href="#catalogue">Products</a>
+      <a href="#apply">Apply</a>
+    </nav>
+    <div class="nav-search" id="navSearch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search our range…" autocomplete="off">
+      <div class="search-suggest" id="searchSuggest"></div>
+    </div>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- BANNER -->
+<section class="banner-hero vendor-hide">
+  <!-- A slider with one slide today. Drop more files into assets/ and add them
+       to BANNERS in main.js and they rotate; arrows and dots appear on their own. -->
+  <div class="slider" id="heroSlider" aria-roledescription="carousel" aria-label="Offers">
+    <div class="slider-track" id="heroTrack"></div>
+    <button class="slider-nav prev" id="heroPrev" aria-label="Previous">&lsaquo;</button>
+    <button class="slider-nav next" id="heroNext" aria-label="Next">&rsaquo;</button>
+    <div class="slider-dots" id="heroDots"></div>
+  </div>
+</section>
+
+<!-- FIGURES -->
+<section class="trust vendor-hide">
+  <div class="trust-item"><strong data-count="110">0</strong><small>Product Lines</small></div>
+  <div class="trust-item"><strong data-count="30">0</strong><small>Brands</small></div>
+  <div class="trust-item"><strong data-count="500">0</strong><small>Trade Partners</small></div>
+  <div class="trust-item"><strong data-count="30">0</strong><small>% Max Discount</small></div>
+</section>
+
+<!-- SHOP BY BRAND -->
+<section class="section vendor-hide" id="brandsSection">
+  <div class="section-head">
+    <div>
+      <h2>Shop by brand</h2>
+      <p class="section-sub">The names your customers ask for, stocked by the case.</p>
+    </div>
+    <a class="btn btn-ghost" href="#catalogue">All products →</a>
+  </div>
+  <!-- Auto-scrolling logo strip. The track is rendered twice so the loop has
+       no seam; see renderBrands() in main.js. -->
+  <div class="brand-marquee" id="brandMarquee">
+    <div class="brand-track" id="brandTrack"></div>
+  </div>
+</section>
+
+<section class="section" style="padding-bottom:0"><div id="statusBanner"></div></section>
+
+
+<!-- CATALOGUE -->
+<section class="section" id="catalogue">
+  <div class="section-head">
+    <div><span class="eyebrow">// Catalogue</span><h2>Our <span class="grad-text">Product Range</span></h2></div>
+    <div class="shop-controls">
+      <button class="btn btn-ghost shop-filter-toggle" id="filterToggle" aria-expanded="false">Filters</button>
+      <span class="result-count" id="resultCount"></span>
+    </div>
+  </div>
+
+  <!-- Sidebar and grid. With thousands of lines the browsing controls need a
+       column of their own rather than a row of chips above the products. -->
+  <div class="shop-layout">
+    <aside class="shop-side" id="shopSide">
+      <div class="side-block">
+        <label class="side-label" for="sideSearch">Search</label>
+        <input type="text" id="sideSearch" class="input" placeholder="Name, size or code…" autocomplete="off">
+      </div>
+
+      <div class="side-block">
+        <label class="side-label" for="sortSelect">Sort by</label>
+        <select id="sortSelect" class="select">
+          <option value="featured">Featured</option>
+          <option value="name">Name: A → Z</option>
+          <option value="brand">Brand</option>
+          <option value="stock">Stock: High → Low</option>
+        </select>
+      </div>
+
+      <div class="side-block">
+        <div class="side-head">
+          <span class="side-label">Availability</span>
+        </div>
+        <label class="side-check">
+          <input type="checkbox" id="inStockOnly"> In stock only
+        </label>
+      </div>
+
+      <div class="side-block grow">
+        <div class="side-head">
+          <span class="side-label">Categories</span>
+          <button class="side-clear" id="clearCats" hidden>Clear</button>
+        </div>
+        <input type="text" id="catFilter" class="input sm" placeholder="Find a category…" autocomplete="off">
+        <div class="side-cats" id="sideCats"></div>
+      </div>
+
+      <button class="btn btn-ghost side-reset" id="clearFilters">Reset everything</button>
+    </aside>
+
+    <div class="shop-main">
+      <div class="active-filters" id="activeFilters"></div>
+      <div class="products-grid" id="productsGrid"></div>
+    </div>
+  </div>
+  <div class="preview-more" id="previewMore" hidden></div>
+  <div class="empty-state" id="emptyState" hidden>
+    <span>🔍</span><h3>No products found</h3><p>Try a different search or category.</p>
+    <button class="btn btn-ghost" id="clearFilters">Clear filters</button>
+  </div>
+</section>
+
+
+<!-- APPLY -->
+<section class="section vendor-hide" id="apply">
+  <div class="apply-wrap">
+    <div class="apply-copy">
+      <span class="eyebrow">// Trade Application</span>
+      <h2>Open a Wholesale <span class="grad-text">Account</span></h2>
+      <p>We supply registered businesses only. Tell us about your shop and our trade team will review your application — usually within one working day.</p>
+      <ul class="checklist">
+        <li>Free to apply, no commitment or minimum contract</li>
+        <li>Reviewed within 24 hours by our trade team</li>
+        <li>Get assigned a tier with up to 30% off list price</li>
+        <li>Trade login with full pricing and online ordering</li>
+      </ul>
+      <div class="apply-note">🔒 Prices are never shown publicly. Your pricing is private to your account.</div>
+    </div>
+    <form class="apply-form" id="applyForm" novalidate>
+      <h3>Apply in 30 seconds</h3>
+      <div class="field"><label for="ap-name">Your name *</label><input id="ap-name" placeholder="Amrit Singh" autocomplete="name"></div>
+      <div class="field"><label for="ap-shop">Shop / business name *</label><input id="ap-shop" placeholder="Singh's Superstore Ltd" autocomplete="organization"></div>
+      <div class="field"><label for="ap-email">Email address *</label><input id="ap-email" type="email" placeholder="orders@yourstore.co.uk" autocomplete="email"></div>
+      <div class="field"><label for="ap-phone">Phone number *</label><input id="ap-phone" type="tel" placeholder="+44 7700 900000" autocomplete="tel"></div>
+      <div class="field"><label for="ap-address">Delivery address *</label><input id="ap-address" placeholder="12 High Street" autocomplete="address-line1"></div>
+      <div class="field-row">
+        <div class="field"><label for="ap-city">Town / city</label><input id="ap-city" placeholder="Leicester" autocomplete="address-level2"></div>
+        <div class="field"><label for="ap-postcode">Postcode *</label><input id="ap-postcode" placeholder="LE1 1AA" autocomplete="postal-code"></div>
+      </div>
+      <button class="btn btn-primary btn-lg full" type="submit">Submit Application <span class="arrow">→</span></button>
+      <p class="form-foot">Already approved? <a href="login.html">Sign in to your trade account</a></p>
+    </form>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="footer" id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="logo" href="#top" data-logo></a>
+      <p>B2B wholesale food &amp; FMCG supply across the UK and Ireland. Trade accounts only.</p>
+      <div class="socials"><a href="#" aria-label="Instagram">◈</a><a href="#" aria-label="Facebook">◉</a><a href="#" aria-label="LinkedIn">◫</a><a href="#" aria-label="WhatsApp">✆</a></div>
+    </div>
+    <div><h4>Trade</h4><a href="#catalogue">Product Range</a><a href="#apply">Apply for Account</a><a href="login.html">Trade Login</a></div>
+    <div><h4>Company</h4><a href="#apply">Become a Partner</a><a href="#">Wholesale Terms</a><a href="#">Delivery &amp; Returns</a><a href="#">Privacy Policy</a></div>
+    <div><h4>Contact</h4><a href="mailto:trade@grocery.com">trade@grocery.com</a><a href="tel:+440000000000">+44 (0) 000 000 000</a><span class="footer-note">United Kingdom &amp; Ireland</span><a href="login.html#admin" class="admin-link">Staff / Admin login</a></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 GROCERY. All rights reserved.</span><span>Trade only · Prices excl. VAT 🌿</span></div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="cartDrawer" aria-label="Order">
+  <div class="drawer-head"><h3>Your Order <span id="cartCount"></span></h3><button class="close-btn" id="closeCart">✕</button></div>
+  <div class="drawer-body" id="cartItems"></div>
+  <div class="drawer-foot" id="cartFoot">
+    <div class="row"><span>Delivery</span><b>FREE</b></div>
+    <div class="row total"><span>Order total</span><b id="cartNet">£0.00</b></div>
+    <button class="btn btn-primary btn-lg full" id="placeOrderBtn">Place Order <span class="arrow">→</span></button>
+  </div>
+</aside>
+
+<div class="modal-overlay" id="quickViewOverlay"><div class="modal" id="quickView"></div></div>
+<div class="modal-overlay" id="msgOverlay"><div class="modal msg-modal" id="msgModal"></div></div>
+
+<div class="toasts" id="toasts"></div>
+<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+
+<script src="store.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

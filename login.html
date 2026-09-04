@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — GROCERY Trade Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('grc-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/logo.svg">
+</head>
+<body class="auth-page">
+
+<div class="auth-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="grid-overlay"></div></div>
+
+<div class="auth-wrap">
+  <a class="logo auth-logo" href="index.html" data-logo></a>
+
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="vendor">🏪 Vendor</button>
+      <button class="auth-tab" data-tab="admin">🛠 Admin</button>
+      <button class="auth-tab" data-tab="warehouse">🏭 Warehouse</button>
+    </div>
+
+    <!-- VENDOR -->
+    <form class="auth-form" id="vendorForm">
+      <h2>Trade Account Sign In</h2>
+      <p class="auth-sub">Sign in to reveal your tier pricing and place wholesale orders.</p>
+      <div class="field"><label for="v-email">Email address</label><input id="v-email" type="email" placeholder="orders@yourstore.co.uk" autocomplete="username"></div>
+      <div class="field"><label for="v-pass">Trade password</label><input id="v-pass" type="password" value="GR-4821" autocomplete="current-password"></div>
+      <label class="remember"><input type="checkbox" id="v-remember"> Keep me signed in</label>
+      <div class="auth-error" id="vendorError" hidden></div>
+      <button class="btn btn-primary btn-lg full" type="submit">Sign In <span class="arrow">→</span></button>
+      <p class="form-foot">No account yet? <a href="index.html#apply">Apply for a wholesale account</a></p>
+      <div class="demo-hint">
+        <b>Demo accounts</b>
+        <code>amrit@singhs.co.uk · GR-4821 <em>(Tier A)</em></code>
+        <code>priya@patelbros.com · GR-7734 <em>(Tier B)</em></code>
+      </div>
+    </form>
+
+    <!-- ADMIN -->
+    <form class="auth-form" id="adminForm" hidden>
+      <h2>Admin Sign In</h2>
+      <p class="auth-sub">Opens the Warehouse ERP — products, stock, purchases, sales and accounts.</p>
+      <div class="field"><label for="a-email">Admin email</label><input id="a-email" type="email" value="admin@grocery.com" autocomplete="username"></div>
+      <div class="field"><label for="a-pass">Password</label><input id="a-pass" type="password" value="admin@123" autocomplete="current-password"></div>
+      <label class="remember"><input type="checkbox" id="a-remember"> Keep me signed in</label>
+      <div class="auth-error" id="adminError" hidden></div>
+      <button class="btn btn-primary btn-lg full" type="submit">Sign In to Admin <span class="arrow">→</span></button>
+      <div class="demo-hint"><b>Demo admin</b><code>admin@grocery.com · admin@123</code></div>
+    </form>
+
+    <!-- WAREHOUSE -->
+    <form class="auth-form" id="warehouseForm" hidden>
+      <h2>Warehouse Sign In</h2>
+      <p class="auth-sub">Fulfilment access: view incoming orders and update packing status. No pricing is shown.</p>
+      <div class="field"><label for="w-email">Warehouse email</label><input id="w-email" type="email" value="warehouse@grocery.com" autocomplete="username"></div>
+      <div class="field"><label for="w-pass">Password</label><input id="w-pass" type="password" value="pack@123" autocomplete="current-password"></div>
+      <label class="remember"><input type="checkbox" id="w-remember"> Keep me signed in</label>
+      <div class="auth-error" id="warehouseError" hidden></div>
+      <button class="btn btn-primary btn-lg full" type="submit">Open Fulfilment Queue <span class="arrow">→</span></button>
+      <div class="demo-hint"><b>Demo warehouse</b><code>warehouse@grocery.com · pack@123</code></div>
+    </form>
+  </div>
+
+  <a class="auth-back" href="index.html">← Back to the store</a>
+</div>
+
+<div class="toasts" id="toasts"></div>
+<script src="store.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>
