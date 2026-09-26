@@ -1,0 +1,1289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="7 Jan">
+<title>Road to 7 January</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff6b2c'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' font-family='Arial' font-weight='900' fill='white'%3E7%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0e1014; --card:#171a21; --card2:#1f232c; --line:#2a2f3a;
+  --text:#f3f4f6; --muted:#9aa3b2;
+  --orange:#ff6b2c; --lime:#a3e635; --blue:#38bdf8; --red:#f43f5e; --gold:#fbbf24; --purple:#a78bfa;
+  --run:#ff6b2c; --walk:#0ea5a4;
+  --r:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{min-height:100vh;overscroll-behavior-y:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--text);background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;width:100%}
+h1,h2,h3{margin:0;line-height:1.15}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px calc(96px + env(safe-area-inset-bottom))}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.row{display:flex;gap:10px;align-items:center}
+.grow{flex:1}
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:rgba(14,16,20,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:calc(10px + env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line)}
+header .in{max-width:560px;margin:0 auto}
+.hname{font-weight:800;font-size:15px}
+.hstats{display:flex;gap:12px;font-size:13px;font-weight:700;color:var(--muted)}
+.hstats b{color:var(--text)}
+.xpbar{height:6px;background:var(--card2);border-radius:9px;overflow:hidden;margin-top:8px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--orange),var(--gold));border-radius:9px;transition:width .6s}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:14px}
+.card h3{font-size:17px;margin-bottom:6px}
+.hero{margin-top:14px;border-radius:24px;padding:20px;background:radial-gradient(120% 120% at 100% 0%,#3a1d10 0%,#1a1410 45%,var(--card) 100%);border:1px solid #3a2a20;position:relative;overflow:hidden}
+.hero .big{font-size:64px;font-weight:900;line-height:1;letter-spacing:-2px}
+.hero .lab{font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--orange)}
+.hero .cake{position:absolute;right:14px;top:10px;font-size:54px;opacity:.9}
+.phase{display:inline-block;margin-top:10px;font-size:12px;font-weight:800;padding:5px 10px;border-radius:99px;background:rgba(255,107,44,.15);color:#ffb08a}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-weight:700;font-size:15px}
+.btn.primary{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn.lime{background:var(--lime);border-color:var(--lime);color:#111}
+.btn.ghost{background:transparent}
+.btn.block{width:100%}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:11px}
+.lnk{color:var(--blue);font-weight:700;font-size:13px;padding:6px 4px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+.chip{padding:10px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-weight:700;font-size:14px}
+.chip.on{background:rgba(255,107,44,.18);border-color:var(--orange);color:#fff}
+.q{font-weight:700;font-size:14px;margin-top:4px}
+
+/* tasks */
+.task{display:flex;gap:12px;padding:14px;border-radius:16px;background:var(--card2);border:1px solid var(--line);margin-top:10px}
+.task.done{opacity:.75;border-color:#2f4a1a}
+.task .te{font-size:30px;line-height:1}
+.task .tt{font-weight:800;font-size:16px}
+.task .td{color:var(--muted);font-size:14px;margin-top:4px}
+.task .ta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.task .tadj{font-size:12px;color:var(--gold);margin-top:6px}
+.xp{display:inline-block;font-size:12px;font-weight:800;color:var(--gold);margin-top:6px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;padding:7px 11px;border-radius:99px}
+.pill.ok{background:rgba(163,230,53,.15);color:var(--lime)}
+.pill.bad{background:rgba(244,63,94,.15);color:#fda4af}
+.pill.info{background:rgba(56,189,248,.15);color:#7dd3fc}
+.lock{font-size:13px;color:var(--muted);font-weight:700}
+.k-long{border-color:#5b3a1e;background:linear-gradient(135deg,#2a1d14,var(--card2))}
+.k-race{border-color:var(--gold);background:linear-gradient(135deg,#3b2c0a,var(--card2))}
+.k-boss{border-color:#5b3fa0;background:linear-gradient(135deg,#231a3a,var(--card2))}
+
+.verdict{border-left:4px solid var(--lime)}
+.verdict.amber{border-left-color:var(--gold)}
+.verdict.red{border-left-color:var(--red)}
+.verdict ul{margin:6px 0 0;padding-left:18px}
+.verdict li{margin:4px 0}
+
+/* journey */
+.prog{height:14px;border-radius:9px;background:var(--card2);position:relative;margin:26px 0 8px}
+.prog i{position:absolute;left:0;top:0;bottom:0;border-radius:9px;background:linear-gradient(90deg,var(--orange),var(--gold))}
+.prog .me{position:absolute;top:-24px;font-size:22px;transform:translateX(-50%)}
+.prog .fin{position:absolute;right:-4px;top:-24px;font-size:22px}
+.wk{margin-top:18px}
+.wk h4{margin:0 0 6px;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.day{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin-top:6px}
+.day.today{border-color:var(--orange);box-shadow:0 0 0 1px var(--orange) inset}
+.day .dd{width:78px;font-size:13px;font-weight:700;color:var(--muted)}
+.day .dt{flex:1;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day .ds{font-size:18px}
+
+/* stats */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--card2);border-radius:14px;padding:12px;text-align:center}
+.stat b{display:block;font-size:22px;font-weight:900}
+.stat span{font-size:12px;color:var(--muted);font-weight:700}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.bdg{text-align:center;background:var(--card2);border-radius:14px;padding:10px 4px}
+.bdg .e{font-size:28px}
+.bdg .n{font-size:11px;font-weight:800;margin-top:4px}
+.bdg.off{opacity:.3;filter:grayscale(1)}
+.lvl{display:flex;align-items:center;gap:14px}
+.lvl .e{font-size:46px}
+
+/* guide */
+details{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:10px;padding:0 14px}
+summary{padding:14px 0;font-weight:800;list-style:none;cursor:pointer}
+summary::after{content:"＋";float:right;color:var(--muted)}
+details[open] summary::after{content:"－"}
+details .body{padding-bottom:14px;color:#d6dae2;font-size:15px}
+details table{width:100%;border-collapse:collapse;font-size:14px}
+details td{border-top:1px solid var(--line);padding:8px 4px;vertical-align:top}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);width:100%;text-align:left}
+.check .bx{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:14px}
+.check.on .bx{background:var(--lime);border-color:var(--lime);color:#111}
+.check.on span:last-child{color:var(--muted);text-decoration:line-through}
+
+/* tabbar */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(14,16,20,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:11px;font-weight:700;color:var(--muted)}
+nav button .i{font-size:22px;filter:grayscale(1);opacity:.7}
+nav button.on{color:var(--text)}
+nav button.on .i{filter:none;opacity:1}
+
+/* sheet */
+#sheetBg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;display:none}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;max-height:92vh;overflow:auto;background:var(--card);border-radius:24px 24px 0 0;border-top:1px solid var(--line);padding:10px 18px calc(24px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .28s ease}
+#sheet.open{transform:none}
+#sheet .grab{width:44px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 12px}
+#sheet .in{max-width:560px;margin:0 auto}
+label.f{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
+input[type=range]{padding:0;background:none;border:0;accent-color:var(--orange)}
+.rpe{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+
+/* timer */
+#timer{position:fixed;inset:0;z-index:60;display:none;background:var(--run);color:#fff;transition:background .4s}
+#timer.walk{background:var(--walk)}
+#timer.done{background:#16a34a}
+#timer.paused{background:#3f3f46}
+.tm{max-width:560px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding:calc(12px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom))}
+.tm-top{display:flex;align-items:center;gap:10px}
+.tm-top button{font-size:22px;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.18)}
+.tm-title{flex:1;text-align:center;font-weight:800;font-size:15px;opacity:.95}
+.tm-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.tm-phase{font-size:64px;font-weight:900;letter-spacing:2px;line-height:1}
+.tm-count{font-size:96px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.05;margin-top:6px}
+.tm-sub{font-size:17px;font-weight:700;opacity:.9;margin-top:8px}
+.tm-bar{height:10px;background:rgba(0,0,0,.2);border-radius:9px;overflow:hidden;width:100%;margin-top:20px}
+.tm-bar i{display:block;height:100%;background:#fff;border-radius:9px}
+.tm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px;width:100%}
+.tm-grid div{background:rgba(0,0,0,.16);border-radius:14px;padding:10px}
+.tm-grid b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.tm-grid span{font-size:12px;font-weight:700;opacity:.85}
+.tm-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tm-btns button{padding:16px;border-radius:16px;background:rgba(0,0,0,.2);font-weight:800;font-size:17px}
+.tm-btns button.primary{background:#fff;color:#111}
+.tm-btns button.wide{grid-column:1/-1}
+.tm-tip{text-align:center;font-size:12px;opacity:.8;margin:10px 0 0}
+
+/* misc */
+#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%) translateY(-20px);background:#fff;color:#111;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;z-index:80;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
+.cert{margin-top:14px;border-radius:24px;padding:24px 20px;text-align:center;background:linear-gradient(160deg,#3b2c0a,#1b1508 60%,#111);border:2px solid var(--gold)}
+.cert h2{font-size:30px;margin:8px 0}
+.cert .km{font-size:56px;font-weight:900;color:var(--gold);line-height:1}
+.celebrate{text-align:center}
+.celebrate .xpbig{font-size:54px;font-weight:900;color:var(--gold)}
+.onb{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:32px 20px calc(32px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto}
+.onb h1{font-size:40px;letter-spacing:-1px}
+.onb .rule{display:flex;gap:12px;align-items:flex-start;margin-top:14px}
+.onb .rule b{font-size:26px}
+.sep{height:1px;background:var(--line);margin:14px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="nav"></nav>
+<div id="sheetBg" data-a="sheet-close"></div>
+<div id="sheet"><div class="grab"></div><div class="in" id="sheetIn"></div></div>
+<div id="timer"></div>
+<div id="toast"></div>
+<canvas id="fx"></canvas>
+
+<script>
+'use strict';
+/* =====================================================================
+   ROAD TO 7 JANUARY: a marathon training game.
+   Single-user, offline-first. All progress is stored on this device.
+   ===================================================================== */
+
+const START = '2026-09-26';        // setup weekend (Sat)
+const W1 = '2026-09-28';           // Monday of week 1
+const BIRTHDAY = '2027-01-07';     // Thursday: race day
+const KEY = 'road7jan.v1';
+const Q = new URLSearchParams(location.search);
+
+/* ---------------- dates (all as 'YYYY-MM-DD', calendar maths in UTC) */
+const pad = n => String(n).padStart(2, '0');
+const dn = s => { const [y, m, d] = s.split('-').map(Number); return Math.round(Date.UTC(y, m - 1, d) / 864e5); };
+const ds = n => { const d = new Date(n * 864e5); return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); };
+const add = (s, k) => ds(dn(s) + k);
+const wd = s => new Date(dn(s) * 864e5).getUTCDay();
+const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DOWL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const fmt = s => { const [, m, d] = s.split('-').map(Number); return DOW[wd(s)] + ' ' + d + ' ' + MON[m - 1]; };
+const fmtLong = s => { const [y, m, d] = s.split('-').map(Number); return DOWL[wd(s)] + ' ' + d + ' ' + MON[m - 1] + ' ' + y; };
+function today() {
+  const o = Q.get('date');
+  if (o && /^\d{4}-\d\d-\d\d$/.test(o)) return o;           // preview/testing: ?date=2026-11-28
+  const d = new Date();
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fm = m => (m % 1 ? Math.floor(m) + '½' : m) + ' min';
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const hms = ms => { const s = Math.max(0, Math.floor(ms / 1000)); const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return h ? h + ':' + pad(m) + ':' + pad(x) : pad(m) + ':' + pad(x); };
+const hmin = min => { min = Math.round(min || 0); const h = Math.floor(min / 60); return h ? h + 'h ' + pad(min % 60) + 'm' : min + ' min'; };
+
+/* ---------------- state */
+function defState() {
+  return {
+    v: 1, name: '', onboarded: false, mode: 'full', raceDate: BIRTHDAY,
+    logs: {}, bosses: {}, seen: [], injuryUntil: null, injuryStart: null, riskAccepted: false,
+    settings: { voice: true, beep: true, vibrate: true, gps: false, loopKm: 5, remind: '07:00' },
+    raceChecklist: {}, timer: null, created: today()
+  };
+}
+let S;
+try { S = Object.assign(defState(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { S = defState(); }
+S.settings = Object.assign(defState().settings, S.settings || {});
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('⚠️ Could not save: storage blocked'); } }
+const LG = d => S.logs[d] || (S.logs[d] = { tasks: {} });
+const tl = (d, id) => S.logs[d] && S.logs[d].tasks && S.logs[d].tasks[id];
+let TAB = 'today';
+
+/* ---------------- task builders */
+function tIv(r, w, n, o) { return Object.assign({ kind: 'intervals', iv: { run: r, walk: w, reps: n, warm: 5, cool: 5 }, min: 10 + Math.round(n * (r + w)), xp: 100, emoji: '🏃', title: `Run-walk · ${n} × (${fm(r)} run / ${fm(w)} walk)` }, o || {}); }
+function tLongTime(total, r, w) { const n = Math.floor(total / (r + w)); return tIv(r, w, n, { long: true, xp: 150, emoji: '⛰️', title: `LONG run-walk · ${n * (r + w)} min (${fm(r)} run / ${fm(w)} walk)` }); }
+function tRun(km, o) { return Object.assign({ kind: 'run', km, xp: Math.round(100 + 10 * km), emoji: '👟', title: `Easy run · ${km} km` }, o || {}); }
+function tJog(min, o) { return Object.assign({ kind: 'run', min, xp: 80, emoji: '👟', title: `Easy jog · ${min} min` }, o || {}); }
+function tLong(km, o) { return Object.assign({ kind: 'long', km, xp: Math.round(150 + 15 * km), emoji: '⛰️', title: `LONG RUN · ${km} km` }, o || {}); }
+function tWalk(min, title) { return { kind: 'walk', min, xp: 40, emoji: '🚶', title: title || `Brisk walk · ${min} min` }; }
+function tStr(light) { return { kind: 'strength', light: !!light, xp: light ? 40 : 60, emoji: '💪', title: light ? 'Light strength · 1–2 rounds' : 'Strength circuit · 3 rounds' }; }
+function tRest(title, detail) { return { kind: 'rest', xp: 20, emoji: '😴', title: title || 'Rest day', detail }; }
+function tRace(km) { return { kind: 'race', km, xp: 1000, emoji: '🎂', title: km > 40 ? 'BIRTHDAY MARATHON · 42.2 km' : 'BIRTHDAY HALF MARATHON · 21.1 km' }; }
+function tBoss(n) { return { kind: 'boss', n, xp: 300, emoji: n === 1 ? '👾' : '🐉', title: `BOSS BATTLE · Checkpoint ${n}` }; }
+function tPrep(title, items, xp) { return { kind: 'prep', title, items, xp: xp || 50, emoji: '🎒' }; }
+const isRun = t => !!t && (t.kind === 'intervals' || t.kind === 'run' || t.kind === 'long' || t.kind === 'race');
+const isLongT = t => !!t && (t.kind === 'long' || !!t.long);
+const HALF = () => S.mode === 'half';
+const raceKm = () => (HALF() ? 21.1 : 42.2);
+
+/* ---------------- the training plan */
+const P1 = { 1: [[1, 2, 8], [30, 1, 2], 30], 2: [[2, 2, 8], [40, 2, 2], 35], 3: [[3, 1.5, 7], [50, 3, 1], 40], 4: [[5, 1, 5], null, 0] };
+const P2 = { 5: [5, 5, 8, 3], 6: [5, 6, 11, 3], 7: [6, 6, 14, 4], 8: [5, 5, 10, 3], 9: [6, 7, 16, 4], 10: [6, 7, 20, 4], 11: [6, 8, 24, 4], 12: [5, 7, 28, 3] };
+const HALF_CAP = { 9: 14, 10: 16, 11: 18, 12: 19 };
+const CP = { '2026-10-25': 1, '2026-11-22': 2 };
+const weekOf = d => Math.floor((dn(d) - dn(W1)) / 7) + 1;
+
+function basePlan(d) {
+  const w = wd(d), T = [], n = dn(d), race = S.raceDate;
+  let phase = '', note = '';
+  if (n < dn(START)) {
+    phase = 'Before the game';
+    T.push(tRest('The game starts Sat 26 Sep', 'Get ready: shoes, app, calendar.'));
+  } else if (d === race) {
+    phase = 'RACE DAY';
+    T.push(tRace(raceKm()));
+  } else if (n > dn(race)) {
+    phase = 'Recovery';
+    const k = n - dn(race);
+    const R = {
+      1: tRest('Recovery day 1', 'Gentle walking, eat well, sleep. You earned it.'),
+      2: tWalk(20, 'Recovery walk · 20 min'), 3: tRest('Recovery rest'),
+      4: tWalk(30, 'Recovery walk · 30 min'), 5: tRest('Recovery rest'),
+      6: tJog(15, { title: 'First jog back · 15 min very easy' }), 7: tWalk(30, 'Recovery walk · 30 min')
+    };
+    T.push(R[k] || tRest('Free play', 'Game complete! Run for fun whenever you like.'));
+  } else if (n < dn(W1)) {
+    phase = 'Setup weekend';
+    if (d === START) T.push(tPrep('Setup mission', ['Get running shoes fitted at a running shop', 'Install Strava or Nike Run Club', 'Put your runs in your calendar (Me → Calendar reminders)', 'Add this app to your home screen', 'Tell one friend about your birthday marathon']), tWalk(30));
+    else { T.push(tWalk(30), tStr(true)); note = 'Learn the strength moves: just 1 round today.'; }
+  } else if (n >= dn('2026-12-21')) {
+    phase = n >= dn('2027-01-04') ? 'Race week' : 'Taper';
+    const h = HALF();
+    const X = {
+      '2026-12-21': [tRest()], '2026-12-22': [tRun(h ? 5 : 6)], '2026-12-23': [tStr(true)],
+      '2026-12-24': [tRun(5, { emoji: '🎄' })],
+      '2026-12-25': [tRest('Christmas Day 🎄', 'Rest and enjoy it. No run today.')],
+      '2026-12-26': [tRest('Boxing Day', 'Rest. A gentle walk is fine.')],
+      '2026-12-27': [tLong(h ? 12 : 16)], '2026-12-28': [tRest()],
+      '2026-12-29': [tRun(h ? 5 : 6)], '2026-12-30': [tStr(true)],
+      '2026-12-31': [tRun(5, { emoji: '🎆' })],
+      '2027-01-01': [tRest('New Year’s Day 🎆', 'Rest and hydrate.')],
+      '2027-01-02': [tLong(h ? 8 : 10)], '2027-01-03': [tJog(20)],
+      '2027-01-04': [tRun(4, { title: 'Easy 4 km + 4 × 1 min slightly faster', strides: true })],
+      '2027-01-05': [tRest('Rest + carb up', 'Carb-rich meals from today: rice, pasta, roti, potatoes. Drink water through the day.')],
+      '2027-01-06': [tWalk(15, 'Shake-out walk · 15 min'), tPrep('Race kit check', ['Tested shoes & socks laid out', 'Gels / jelly babies (1 per 30–40 min)', 'Water bottle filled', 'Vaseline / anti-chafe', 'Hi-vis, hat, gloves', 'Phone charged + live location ready', 'Loop route & home aid station ready', 'Alarm set · breakfast ready'])]
+    };
+    if (dn(race) > dn(BIRTHDAY) && n >= dn(BIRTHDAY)) {
+      if (d === BIRTHDAY) T.push(tJog(15, { title: 'Birthday shake-out · 15 min easy 🎂' }));
+      else T.push(tWalk(15, 'Shake-out walk · 15 min'));
+    } else if (X[d]) T.push(...X[d]);
+    else T.push(tRest());
+  } else {
+    const wk = weekOf(d);
+    phase = wk <= 4 ? 'Phase 1 · Build the habit' : 'Phase 2 · Build distance';
+    if (wk <= 4) {
+      const p = P1[wk];
+      if (w === 1 || w === 5) T.push(tRest());
+      if (w === 2 || w === 4) T.push(tIv(...p[0]));
+      if (w === 3) T.push(tStr());
+      if (w === 6) T.push(wk === 4 ? tLong(5, { title: 'LONG run-walk · 5 km' }) : tLongTime(...p[1]));
+      if (w === 0) { T.push(wk === 4 ? tJog(20, { title: 'Easy jog/walk · 20 min' }) : tWalk(p[2])); T.push(tStr()); }
+    } else {
+      const [tu, th, sa, su] = P2[wk];
+      const lk = HALF() && HALF_CAP[wk] ? Math.min(sa, HALF_CAP[wk]) : sa;
+      if (w === 1 || w === 5) T.push(tRest());
+      if (w === 2) T.push(tRun(tu));
+      if (w === 3) T.push(tStr());
+      if (w === 4) T.push(tRun(th));
+      if (w === 6) T.push(tLong(lk));
+      if (w === 0) { T.push(tRun(su)); T.push(tStr()); }
+    }
+    if (wk === 4 || wk === 8) note = 'Easier week: recover and absorb the training.';
+    if (wk === 12) note = 'PEAK WEEK 🏔️ The biggest long run of the game is on Saturday.';
+    if (CP[d]) T.push(tBoss(CP[d]));
+  }
+  return { date: d, phase, note, tasks: T };
+}
+
+/* plan with coach adjustments applied */
+function scaleTask(t, f) {
+  const c = Object.assign({}, t, { scaled: f, origTitle: t.title });
+  if (t.kind === 'intervals') {
+    c.iv = Object.assign({}, t.iv, { reps: Math.max(2, Math.round(t.iv.reps * f)) });
+    const mins = Math.round(c.iv.reps * (c.iv.run + c.iv.walk));
+    c.min = 10 + mins;
+    c.title = t.title.replace(/\d+ ×/, c.iv.reps + ' ×').replace(/· \d+ min \(/, '· ' + mins + ' min (');
+  } else if (t.km) {
+    c.km = Math.max(1, Math.round(t.km * f * 2) / 2);
+    c.title = t.title.replace(/[\d.]+ km/, c.km + ' km');
+  } else if (t.min) {
+    c.min = Math.max(10, Math.round(t.min * f));
+    c.title = t.title.replace(/\d+ min/, c.min + ' min');
+  }
+  return c;
+}
+function applyAdj(p, a) {
+  if (a.type === 'rest') {
+    p.tasks = p.tasks.filter(t => t.kind === 'boss' || t.kind === 'prep');
+    p.tasks.unshift(Object.assign(tRest('Coach says: REST 🛑', a.why || 'Recovery comes first. Rest today.'), { id: p.date + '#r' }));
+  } else if (a.type === 'walk') {
+    p.tasks = p.tasks.filter(t => t.kind !== 'strength').map(t => isRun(t) ? Object.assign(tWalk(20, 'Easy walk instead of the run'), { id: t.id, origTitle: t.title }) : t);
+  } else if (a.type === 'scale' && a.f < 1) {
+    p.tasks = p.tasks.map(t => isRun(t) ? scaleTask(t, a.f) : t);
+  }
+}
+function plan(d) {
+  const p = basePlan(d);
+  p.tasks.forEach((t, i) => { t.id = d + '#' + i; });
+  const L = S.logs[d];
+  if (L && L.moveLong) {
+    const src = basePlan(L.moveLong).tasks.find(isLongT);
+    if (src) { src.id = d + '#m'; src.movedFrom = L.moveLong; p.tasks = p.tasks.filter(t => !isRun(t) && t.kind !== 'rest' && t.kind !== 'walk'); p.tasks.unshift(src); }
+  }
+  if (L && L.adj && d !== S.raceDate) applyAdj(p, L.adj);
+  if (L && L.movedTo) p.tasks.forEach(t => { if (isLongT(t)) t.moved = L.movedTo; });
+  return p;
+}
+const isDone = (d, t) => { const r = tl(d, t.id); return !!r && r.status === 'done'; };
+
+/* ---------------- day status, streaks, XP */
+function dayStatus(d) {
+  const T = today();
+  if (dn(d) > dn(T)) return 'future';
+  const p = plan(d);
+  let need = 0, done = 0, core = 0, coreDone = 0, claimed = false;
+  for (const t of p.tasks) {
+    if (t.kind === 'rest') { if (isDone(d, t)) claimed = true; continue; }
+    if (t.moved) continue;
+    need++; const ok = isDone(d, t); if (ok) done++;
+    if (t.kind !== 'strength' && t.kind !== 'prep') { core++; if (ok) coreDone++; }
+  }
+  if (need === 0) return (d === T && !claimed) ? 'rest-today' : 'rest';
+  if (done === need) return 'done';
+  if (core > 0 && coreDone === core) return 'partial-ok';
+  if (d === T) return 'today';
+  return done > 0 ? 'partial' : 'missed';
+}
+const okDay = d => { const s = dayStatus(d); return s === 'done' || s === 'partial-ok' || s === 'rest'; };
+function streak() {
+  const T = today(); let k = 0, d = T;
+  if (dn(T) < dn(START)) return 0;
+  if (okDay(d)) k++;
+  d = add(T, -1);
+  while (dn(d) >= dn(START) && okDay(d)) { k++; d = add(d, -1); }
+  return k;
+}
+function bestStreak() {
+  let best = 0, cur = 0; const T = today();
+  for (let n = dn(START); n <= dn(T); n++) {
+    const d = ds(n); const s = dayStatus(d);
+    if (s === 'done' || s === 'partial-ok' || s === 'rest') { cur++; best = Math.max(best, cur); }
+    else if (d !== T) cur = 0;
+  }
+  return best;
+}
+function xpTotal() {
+  let x = 0; const T = today();
+  for (const d in S.logs) { const L = S.logs[d]; for (const id in (L.tasks || {})) { const r = L.tasks[id]; if (r.status === 'done' && r.xp) x += r.xp; } }
+  for (let n = dn(START); n < Math.min(dn(T), dn(S.raceDate) + 8); n++) {
+    const d = ds(n);
+    for (const t of plan(d).tasks) if (t.kind === 'rest' && !tl(d, t.id)) x += t.xp;
+  }
+  return x;
+}
+const LEVELS = [[0, 'Couch Starter', '🛋️'], [300, 'Walker', '🚶'], [800, 'Jogger', '👟'], [1600, 'Runner', '🏃'], [2800, 'Long Hauler', '⛰️'], [4200, 'Half Hero', '🦸'], [6000, 'Road Warrior', '⚔️'], [8200, 'Distance Beast', '🐺'], [10500, 'Marathoner', '🏅'], [13000, 'Legend', '👑']];
+function levelInfo(x) {
+  let i = 0; while (i + 1 < LEVELS.length && x >= LEVELS[i + 1][0]) i++;
+  const c = LEVELS[i], nx = LEVELS[i + 1];
+  return { i, name: c[1], emoji: c[2], from: c[0], to: nx ? nx[0] : c[0], next: nx ? nx[1] : null, pct: nx ? (x - c[0]) / (nx[0] - c[0]) : 1 };
+}
+function stats() {
+  const s = { km: 0, runs: 0, min: 0, maxKm: 0, strength: 0, done: 0, race: null, xmas: false, nye: false, best: 0 };
+  for (const d in S.logs) {
+    const L = S.logs[d];
+    for (const id in (L.tasks || {})) {
+      const r = L.tasks[id]; if (r.status !== 'done') continue;
+      s.done++;
+      if (['intervals', 'run', 'long', 'race'].includes(r.kind)) {
+        s.runs++; const km = +r.km || 0; s.km += km; s.maxKm = Math.max(s.maxKm, km); s.min += +r.min || 0;
+        if (['2026-12-24', '2026-12-25', '2026-12-26', '2026-12-27'].includes(d)) s.xmas = true;
+        if (d === '2026-12-31') s.nye = true;
+        if (r.kind === 'race') s.race = Object.assign({ d }, r);
+      } else if (r.kind === 'walk') { s.km += +r.km || 0; s.min += +r.min || 0; }
+      else if (r.kind === 'strength') s.strength++;
+    }
+  }
+  s.best = bestStreak();
+  return s;
+}
+const BADGES = [
+  ['first', '👣', 'First Step', 'Complete your first mission', s => s.done >= 1],
+  ['r10', '🔟', 'Ten Runs', '10 runs completed', s => s.runs >= 10],
+  ['r30', '🎖️', 'Thirty Runs', '30 runs completed', s => s.runs >= 30],
+  ['k5', '5️⃣', '5K Club', '5 km in one go', s => s.maxKm >= 5],
+  ['k10', '🎯', '10K Club', '10 km in one go', s => s.maxKm >= 10],
+  ['k16', '🧭', '10 Miler', '16 km in one go', s => s.maxKm >= 16],
+  ['k21', '🦸', 'Half Distance', '21.1 km in one go', s => s.maxKm >= 21.1],
+  ['k28', '🏔️', 'The Summit', '28 km peak long run', s => s.maxKm >= 28],
+  ['s7', '🔥', 'On Fire', '7-day streak', s => s.best >= 7],
+  ['s21', '☄️', 'Unstoppable', '21-day streak', s => s.best >= 21],
+  ['s50', '🌋', 'Volcano', '50-day streak', s => s.best >= 50],
+  ['st10', '💪', 'Iron Legs', '10 strength sessions', s => s.strength >= 10],
+  ['st25', '🦾', 'Titanium', '25 strength sessions', s => s.strength >= 25],
+  ['t50', '🛣️', '50 km Road', '50 km total', s => s.km >= 50],
+  ['t150', '🗺️', '150 km Road', '150 km total', s => s.km >= 150],
+  ['t300', '🌍', '300 km Road', '300 km total', s => s.km >= 300],
+  ['b1', '👾', 'Boss 1 Down', 'Pass checkpoint 1', () => S.bosses[1] && S.bosses[1].result === 'pass'],
+  ['b2', '🐉', 'Boss 2 Down', 'Pass checkpoint 2', () => S.bosses[2] && S.bosses[2].result === 'pass'],
+  ['xmas', '🎄', 'Festive Runner', 'Run over Christmas', s => s.xmas],
+  ['nye', '🎆', 'New Year Legs', 'Run on 31 Dec', s => s.nye],
+  ['fin', '🏁', 'FINISHER', 'Finish your birthday race', s => !!s.race],
+  ['bday', '🎂', 'Birthday Legend', 'Finish on 7 January', s => !!s.race && s.race.d === BIRTHDAY]
+];
+function newBadges() {
+  const st = stats();
+  const got = BADGES.filter(b => b[4](st)).map(b => b[0]);
+  const fresh = got.filter(id => !S.seen.includes(id));
+  if (fresh.length) { S.seen.push(...fresh); save(); }
+  return fresh.map(id => BADGES.find(b => b[0] === id));
+}
+
+/* ---------------- the coach */
+function lastRunBefore(d) {
+  for (let n = dn(d) - 1; n >= dn(START); n--) {
+    const L = S.logs[ds(n)]; if (!L) continue;
+    for (const id in (L.tasks || {})) { const r = L.tasks[id]; if (r.status === 'done' && ['intervals', 'run', 'long'].includes(r.kind)) return ds(n); }
+  }
+  return null;
+}
+function recentHard(d) {
+  const rs = [];
+  for (let n = dn(d) - 1; n >= dn(d) - 10 && rs.length < 2; n--) {
+    const L = S.logs[ds(n)]; if (!L) continue;
+    for (const id in (L.tasks || {})) { const r = L.tasks[id]; if (r.status === 'done' && ['intervals', 'run', 'long'].includes(r.kind) && r.rpe) rs.push(+r.rpe); }
+  }
+  return rs.length >= 2 && rs.every(x => x >= 8);
+}
+function verdict(d, ci) {
+  const msgs = []; let adj = null, level = 'green';
+  const base = basePlan(d);
+  const hasRun = base.tasks.some(isRun);
+  const isRace = d === S.raceDate;
+
+  if (isRace) {
+    if (ci.pain !== 'none' || ci.legs === 'hurt') {
+      level = 'red';
+      msgs.push('🚨 Do not run 42 km on an injury. Move your race to the backup date and rest today.');
+      msgs.push('BACKUP');
+    } else {
+      if (ci.sleep === 'bad') msgs.push('😴 Bad sleep before a race is normal. It’s the sleep from 2 nights ago that counts.');
+      msgs.push('🎂 Happy birthday! Everything is green. Run 5 / walk 1 from the very first minute, and start slower than feels right.');
+    }
+    return { adj: null, level, msgs };
+  }
+
+  if (ci.pain === 'sharp') {
+    S.injuryUntil = add(d, 2); if (!S.injuryStart) S.injuryStart = d;
+    adj = { type: 'rest', why: 'Sharp pain. Injury protocol: rest today and the next 2 days.' }; level = 'red';
+    msgs.push('🚨 Sharp pain = stop. Rest today and the next 2 days.');
+    msgs.push('If it’s on a bone (shin, foot) or lasts more than 3 days, see a physio or doctor.');
+  } else if (S.injuryUntil && dn(d) <= dn(S.injuryUntil)) {
+    if (ci.pain === 'none' && ci.legs !== 'hurt') {
+      S.injuryUntil = null; S.injuryStart = null;
+      adj = hasRun ? { type: 'scale', f: 0.6 } : null; level = 'amber';
+      msgs.push('💚 Pain gone, welcome back! Easing you in at 60% today.');
+    } else {
+      adj = { type: 'rest', why: 'Still recovering. Rest today.' }; level = 'red';
+      msgs.push('🛑 Still sore. Rest again today.');
+      if (S.injuryStart && dn(d) - dn(S.injuryStart) >= 3) msgs.push('⚠️ It’s been 3+ days. Please book a physio or GP appointment.');
+      S.injuryUntil = add(d, 1);
+    }
+  } else if (ci.pain === 'niggle' || ci.legs === 'hurt') {
+    adj = hasRun ? { type: 'walk' } : null; level = 'amber';
+    msgs.push(hasRun ? '⚠️ Niggle detected. Today’s run becomes an easy 20-min walk. No strength work on the sore area.' : '⚠️ Niggle noted. Good thing it’s a rest day.');
+    msgs.push('Ice/heat, gentle stretching, and check in honestly tomorrow.');
+  } else {
+    let f = 1;
+    if (ci.legs === 'sore') { f = Math.min(f, 0.7); msgs.push('🥵 Sore legs: run cut to 70% today.'); }
+    if (ci.sleep === 'bad') { f = Math.min(f, 0.75); msgs.push('😫 Short sleep: run trimmed to protect you. Early night tonight!'); }
+    const last = lastRunBefore(d);
+    const baseline = dn(START) > dn(S.created) ? START : S.created;
+    const gap = dn(d) - dn(last || baseline);
+    if (hasRun && dn(d) >= dn(W1) + 5 && gap >= 7) { f = Math.min(f, 0.6); msgs.push(`🔁 Comeback mode: ${gap} days since your last run, so starting at 60%.`); }
+    else if (hasRun && dn(d) >= dn(W1) + 5 && gap >= 4) { f = Math.min(f, 0.8); msgs.push(`🔁 ${gap} days since your last run: easing back in at 80%.`); }
+    if (recentHard(d)) { f = Math.min(f, 0.8); msgs.push('🐢 Your last runs felt very hard (RPE 8+). Shorter and SLOWER today.'); }
+    if (f < 1 && hasRun) { adj = { type: 'scale', f }; level = 'amber'; }
+    else if (!hasRun) msgs.push(ci.legs === 'fresh' ? '⚡ Fresh legs on a rest/strength day: bank that energy, don’t add extra runs.' : '✅ All good. Do today’s mission as planned.');
+    else msgs.push(ci.legs === 'fresh' && ci.sleep === 'good' ? '✅ All green. Go as planned, still at conversational pace.' : '✅ Good to go. Mission as planned.');
+  }
+  return { adj, level, msgs };
+}
+
+const TIPS = {
+  p1: ['Run so slowly it feels silly. That’s the right pace right now.', 'Walk breaks are a strategy, not a failure.', 'Your heart adapts in weeks; tendons take months. Patience = no injury.', 'Consistency beats intensity. Showing up today is the win.', 'Short, quick, soft steps. Don’t overstride.', 'Sore the day after is normal. Pain that changes how you run is not.', 'Drink a glass of water when you wake up.'],
+  p2: ['Long run = slow run. Slower than you think.', 'Practise race fuel on every run over 75 minutes.', 'Sleep is when you get fitter. Aim for 7–9 hours.', 'Calf raises are your Achilles insurance. Don’t skip strength.', 'Test your loop route on the long runs. That’s your race course.', 'Carb-rich dinner before long runs: rice, pasta, roti, potatoes.', 'Easier weeks are part of the plan. Absorb the work.', 'Dark evenings: hi-vis and a head torch. Be seen.'],
+  taper: ['Taper tantrums are normal: sluggish or restless. Trust the plan.', 'You can’t gain fitness now, only lose freshness. Don’t cram.', 'Go easy on Christmas treats and New Year drinks before runs.', 'Plan the day: loop, aid station, friends, cake 🎂', 'Nothing new on race day: shoes, socks, gels, breakfast.']
+};
+function tipFor(d) {
+  const tomorrow = add(d, 1), tp = plan(tomorrow).tasks;
+  if (tomorrow === S.raceDate) return '🎂 Tomorrow is THE day. Kit laid out, carb-rich dinner, early night. You are ready.';
+  if (tp.some(isLongT)) return '⛰️ Long run tomorrow: carb-rich dinner tonight, lay out your kit, charge your phone, sleep early.';
+  if (tp.some(t => t.kind === 'boss')) return '👾 Boss battle tomorrow. Be honest with the coach; it keeps you safe.';
+  const n = dn(d);
+  const list = n >= dn('2026-12-21') ? TIPS.taper : (n >= dn('2026-10-26') ? TIPS.p2 : TIPS.p1);
+  return '💡 ' + list[n % list.length];
+}
+
+function describe(t) {
+  switch (t.kind) {
+    case 'intervals': { const v = t.iv; return `Warm-up 5 min walk → ${v.reps} × (${fm(v.run)} run / ${fm(v.walk)} walk) → 5 min cool-down walk. ≈ ${t.min} min total. Conversational pace.`; }
+    case 'run': return t.strides ? 'Easy 4 km. Near the end do 4 × 1 min slightly faster (not a sprint), with 1–2 min easy between.' : (t.km ? 'Conversational pace: you should be able to talk. Walk breaks are fine.' : 'Very easy. Talk-test pace. Walk breaks allowed.');
+    case 'long': return `Run 5 min / walk 1 min from the first minute. ${t.km >= 12 ? 'Gel or jelly babies every 30–40 min from 30 min. Sips of water every 15–20 min. ' : ''}Slow is the goal.`;
+    case 'walk': return 'Brisk pace, arms swinging. It builds your legs without the pounding.';
+    case 'strength': return 'Squats ×12 · Reverse lunges ×10/leg · Glute bridges ×15 · Calf raises ×15 (slow) · Plank 30–45 s · Side plank 20–30 s/side.';
+    case 'rest': return t.detail || 'Rest is training: your body gets stronger today. Walk, stretch, sleep well.';
+    case 'race': return 'Run 5 / walk 1 from the start. Gel every 30–40 min. Slow first 10 km. Km 30–35 is the hard part, so keep moving. Cake at the finish 🎂';
+    case 'boss': return 'Answer honestly. Pass = badge + 300 XP. Fail = the coach adjusts your goal to keep you safe.';
+    case 'prep': return t.items.length + ' things to tick off.';
+  }
+  return '';
+}
+
+/* ---------------- views */
+const $ = s => document.querySelector(s);
+function header() {
+  const x = xpTotal(), L = levelInfo(x), T = today();
+  const left = dn(S.raceDate) - dn(T);
+  return `<header><div class="in">
+    <div class="row"><div class="hname grow">${L.emoji} ${esc(S.name || 'Runner')} · <span class="muted">Lv ${L.i + 1} ${L.name}</span></div>
+    <div class="hstats"><span>🔥 <b>${streak()}</b></span><span>⭐ <b>${x}</b></span>${left >= 0 ? `<span>🎂 <b>${left}</b>d</span>` : ''}</div></div>
+    <div class="xpbar"><i style="width:${Math.round(L.pct * 100)}%"></i></div>
+  </div></header>`;
+}
+function navBar() {
+  const tabs = [['today', '🎯', 'Today'], ['journey', '🗺️', 'Journey'], ['stats', '🏆', 'Stats'], ['guide', '📖', 'Guide'], ['me', '⚙️', 'Me']];
+  return `<div class="in">${tabs.map(t => `<button class="${TAB === t[0] ? 'on' : ''}" data-a="tab" data-t="${t[0]}"><span class="i">${t[1]}</span>${t[2]}</button>`).join('')}</div>`;
+}
+
+let CI = {};
+function checkinCard(d) {
+  const row = (k, q, opts) => `<div class="q">${q}</div><div class="chips" data-k="${k}">${opts.map(o => `<button class="chip${CI[k] === o[0] ? ' on' : ''}" data-a="ci" data-k="${k}" data-v="${o[0]}">${o[1]}</button>`).join('')}</div>`;
+  return `<div class="card"><h3>🩺 Daily check-in</h3><p class="muted small" style="margin:0 0 10px">3 taps. The coach uses your answers to decide today’s mission.</p>
+    ${row('sleep', 'How did you sleep?', [['bad', '😫 < 5 h'], ['ok', '😐 5–7 h'], ['good', '😴 7 h +']])}
+    ${row('legs', 'How do your legs feel?', [['fresh', '⚡ Fresh'], ['normal', '🙂 Normal'], ['sore', '🥵 Sore'], ['hurt', '🤕 Painful']])}
+    ${row('pain', 'Any pain that changes how you run?', [['none', '✅ None'], ['niggle', '⚠️ A niggle'], ['sharp', '🚨 Sharp / on a bone']])}
+    <button class="btn primary block" data-a="ci-submit">Get today’s orders →</button></div>`;
+}
+function verdictCard(d) {
+  const L = S.logs[d]; const v = L.verdict || { level: 'green', msgs: [] };
+  const items = v.msgs.map(m => m === 'BACKUP'
+    ? `<li><div class="row" style="flex-wrap:wrap;gap:8px;margin-top:6px"><button class="btn sm" data-a="race-move" data-to="2027-01-09">Move to Sat 9 Jan</button><button class="btn sm" data-a="race-move" data-to="2027-01-10">Move to Sun 10 Jan</button></div></li>`
+    : `<li>${esc(m)}</li>`).join('');
+  return `<div class="card verdict ${v.level}"><div class="row"><h3 class="grow">🧠 Coach’s orders</h3><button class="lnk" data-a="ci-redo">Redo check-in</button></div><ul>${items}</ul></div>`;
+}
+function longOffer(d) {
+  const w = wd(d); if (w !== 0 && w !== 1) return '';
+  const sat = add(d, w === 0 ? -1 : -2);
+  if (dn(sat) < dn(W1)) return '';
+  const L = S.logs[d];
+  if (L && (L.moveLong || L.noMove)) return '';
+  if (w === 1 && S.logs[add(d, -1)] && S.logs[add(d, -1)].moveLong) return '';
+  const t = plan(sat).tasks.find(isLongT);
+  if (!t || t.moved || isDone(sat, t)) return '';
+  const r = tl(sat, t.id);
+  if (r && r.status === 'skipped' && (r.reason === 'injured' || r.reason === 'ill')) return '';
+  if (S.logs[sat] && S.logs[sat].adj && S.logs[sat].adj.type === 'rest') return '';
+  return `<div class="card" style="border-color:#5b3a1e"><h3>⛰️ Missed Saturday’s long run?</h3><p class="muted small" style="margin:0 0 10px">“${esc(t.title)}” is the most important session of the week. The coach can move it to today${w === 0 ? ' (it replaces today’s short run)' : ''}.</p>
+    <div class="row"><button class="btn primary" data-a="move-long" data-from="${sat}">Yes, do it today</button><button class="btn ghost" data-a="no-move">No, skip it</button></div></div>`;
+}
+function taskCard(d, t, opts) {
+  opts = opts || {};
+  const r = tl(d, t.id), T = today();
+  const future = dn(d) > dn(T), past = dn(d) < dn(T);
+  let act = '';
+  if (t.moved) act = `<span class="pill info">↪ Moved to ${fmt(t.moved)}</span>`;
+  else if (r && r.status === 'done') act = `<span class="pill ok">✅ Done · +${r.xp} XP${r.km ? ' · ' + r.km + ' km' : ''}${r.min ? ' · ' + hmin(r.min) : ''}</span><button class="lnk" data-a="undo" data-d="${d}" data-id="${t.id}">Undo</button>`;
+  else if (r && r.status === 'skipped') act = `<span class="pill bad">Skipped · ${esc(r.reason)}</span><button class="lnk" data-a="undo" data-d="${d}" data-id="${t.id}">Undo</button>`;
+  else if (future) act = `<span class="lock">🔒 Unlocks ${fmt(d)}</span>`;
+  else if (t.kind === 'rest') act = past ? `<span class="pill ok">😴 Rested · +${t.xp} XP</span>` : `<button class="btn sm lime" data-a="claim" data-d="${d}" data-id="${t.id}">😴 I rested · claim +${t.xp} XP</button>`;
+  else if (opts.locked && t.kind !== 'boss' && t.kind !== 'prep') act = `<span class="lock">🔒 Do your check-in first</span>`;
+  else if (t.kind === 'boss') act = `<button class="btn primary sm" data-a="boss" data-d="${d}" data-id="${t.id}">⚔️ Fight the boss</button>`;
+  else if (t.kind === 'prep') act = `<button class="btn primary sm" data-a="prep" data-d="${d}" data-id="${t.id}">📋 Open checklist</button>`;
+  else if (t.kind === 'strength') act = `<button class="btn primary sm" data-a="str" data-d="${d}" data-id="${t.id}">💪 Open circuit</button><button class="btn sm" data-a="log" data-d="${d}" data-id="${t.id}">✍️ Log</button><button class="btn sm ghost" data-a="skip" data-d="${d}" data-id="${t.id}">Skip</button>`;
+  else act = `${d === T ? `<button class="btn primary sm" data-a="start" data-d="${d}" data-id="${t.id}">▶ Start</button>` : ''}<button class="btn sm" data-a="log" data-d="${d}" data-id="${t.id}">✍️ Log it</button><button class="btn sm ghost" data-a="skip" data-d="${d}" data-id="${t.id}">Skip</button>`;
+  return `<div class="task k-${t.kind}${t.long ? ' k-long' : ''}${r && r.status === 'done' ? ' done' : ''}">
+    <div class="te">${t.emoji}</div><div class="grow"><div class="tt">${esc(t.title)}</div><div class="td">${esc(describe(t))}</div>
+    ${t.movedFrom ? `<div class="tadj">↪ Moved from ${fmt(t.movedFrom)}</div>` : ''}
+    ${t.origTitle ? `<div class="tadj">🧠 Coach adjusted this from: ${esc(t.origTitle)}</div>` : ''}
+    ${r ? '' : `<span class="xp">+${t.xp} XP</span>`}
+    <div class="ta">${act}</div></div></div>`;
+}
+
+function viewOnboard() {
+  return `<div class="onb">
+    <div style="font-size:64px">🎂🏃</div>
+    <h1>Road to<br>7 January</h1>
+    <p class="muted">Your birthday marathon game. From almost zero to 42.2 km on <b style="color:var(--text)">Thursday 7 January 2027</b>.</p>
+    <label class="f">What should the coach call you?</label>
+    <input id="obName" placeholder="Your name" value="${esc(S.name)}" maxlength="24">
+    <div class="sep"></div>
+    <div class="rule"><b>🩺</b><div><b>Check in every day.</b><div class="muted small">Sleep, legs, pain. 3 taps.</div></div></div>
+    <div class="rule"><b>🧠</b><div><b>The coach decides.</b><div class="muted small">Your mission adapts: shortened when you’re tired, rest when you’re hurt, moved when you miss one.</div></div></div>
+    <div class="rule"><b>⏱️</b><div><b>Press Start, then follow the voice.</b><div class="muted small">Run/walk cues with beeps and vibration.</div></div></div>
+    <div class="rule"><b>⭐</b><div><b>Earn XP, badges, streaks.</b><div class="muted small">Beat 2 boss battles. Finish on your birthday.</div></div></div>
+    <div class="sep"></div>
+    <label class="f">Your goal</label>
+    <div class="chips"><button class="chip ${S.mode === 'full' ? 'on' : ''}" data-a="ob-mode" data-v="full">🏅 Full marathon · 42.2 km</button><button class="chip ${S.mode === 'half' ? 'on' : ''}" data-a="ob-mode" data-v="half">🦸 Half · 21.1 km</button></div>
+    <p class="muted small">The coach plays it safe. See a doctor first if you have heart, blood-pressure or joint problems.</p>
+    <button class="btn primary block" data-a="ob-go" style="margin-top:8px;padding:16px">I’m in 🔥 Start the game</button>
+  </div>`;
+}
+
+function viewToday() {
+  const d = today(), p = plan(d), L = S.logs[d];
+  const left = dn(S.raceDate) - dn(d);
+  const total = dn(S.raceDate) - dn(START);
+  const dayNo = dn(d) - dn(START) + 1;
+  let h = '';
+  const st = stats();
+
+  if (st.race && dn(d) > dn(st.race.d)) h += certificate(st);
+
+  if (d === S.raceDate) {
+    h += `<div class="hero" style="border-color:var(--gold)"><div class="cake">🎂</div><div class="lab" style="color:var(--gold)">It’s race day</div><div class="big" style="font-size:44px">Happy birthday${S.name ? ', ' + esc(S.name) : ''}!</div><p class="muted" style="margin:8px 0 0">Today you run ${raceKm()} km. Every run, every walk, every early night was for this.</p></div>`;
+  } else if (left > 0) {
+    h += `<div class="hero"><div class="cake">🎂</div><div class="lab">${dn(d) < dn(START) ? 'Game starts in ' + (dn(START) - dn(d)) + ' days' : 'Day ' + dayNo + ' of ' + (total + 1)}</div>
+      <div class="big">${left}</div><div style="font-weight:800">day${left === 1 ? '' : 's'} to your birthday ${HALF() ? 'half ' : ''}marathon</div>
+      <div class="muted small" style="margin-top:4px">${fmtLong(d)}</div><span class="phase">${esc(p.phase)}${dn(d) >= dn(W1) && dn(d) < dn('2026-12-21') ? ' · Week ' + weekOf(d) : ''}</span></div>`;
+  } else {
+    h += `<div class="hero"><div class="cake">🏅</div><div class="lab">${esc(p.phase)}</div><div class="big" style="font-size:40px">${st.race ? 'You did it.' : 'Race day has passed'}</div><div class="muted small">${fmtLong(d)}</div></div>`;
+  }
+  if (p.note) h += `<div class="card" style="padding:12px 16px"><b>📣 ${esc(p.note)}</b></div>`;
+
+  const inGame = dn(d) >= dn(START) && dn(d) <= dn(S.raceDate) + 7;
+  const needsCI = inGame && !(L && L.ci);
+  if (inGame) h += needsCI ? checkinCard(d) : verdictCard(d);
+  h += longOffer(d);
+
+  h += `<div class="card"><h3>🎯 Today’s mission${p.tasks.length > 1 ? 's' : ''}</h3>${p.tasks.map(t => taskCard(d, t, { locked: needsCI })).join('')}</div>`;
+
+  if (dn(d) < dn(S.raceDate)) {
+    const tm = plan(add(d, 1));
+    h += `<div class="card"><h3>👀 Tomorrow · ${fmt(add(d, 1))}</h3><div class="muted">${tm.tasks.map(t => t.emoji + ' ' + esc(t.title)).join('<br>')}</div></div>`;
+  }
+  h += `<div class="card"><div>${esc(tipFor(d))}</div></div>`;
+  return h;
+}
+
+function certificate(st) {
+  const r = st.race;
+  return `<div class="cert"><div class="lab" style="letter-spacing:3px;font-weight:800;color:var(--gold)">🏅 CERTIFICATE OF FINISH</div>
+    <h2>${esc(S.name || 'Runner')}</h2><div class="muted">completed the Birthday ${r.km >= 40 ? 'Marathon' : 'Half Marathon'}</div>
+    <div class="km" style="margin:14px 0 6px">${r.km || raceKm()} km</div>
+    <div>${fmtLong(r.d)}${r.min ? ' · ' + hmin(r.min) : ''}</div>
+    <div class="muted small" style="margin-top:10px">${st.runs} runs · ${Math.round(st.km)} km total · best streak ${st.best} days</div></div>`;
+}
+
+function weekLabel(d) {
+  const n = dn(d);
+  if (n < dn(W1)) return 'Setup weekend';
+  if (n > dn(S.raceDate)) return 'Recovery';
+  const wk = weekOf(d);
+  if (wk <= 4) return 'Week ' + wk + ' · Build the habit';
+  if (wk <= 12) return 'Week ' + wk + (wk === 12 ? ' · PEAK' : ' · Build distance');
+  if (wk <= 14) return 'Week ' + wk + ' · Taper';
+  return 'Race week';
+}
+function viewJourney() {
+  const T = today(), total = dn(S.raceDate) - dn(START), el = clamp(dn(T) - dn(START), 0, total);
+  const pct = total ? el / total * 100 : 0;
+  const st = stats();
+  let h = `<div class="card"><h3>🗺️ The road to ${fmt(S.raceDate)}</h3>
+    <div class="prog"><i style="width:${pct}%"></i><span class="me" style="left:${pct}%">🏃</span><span class="fin">🎂</span></div>
+    <div class="row small muted"><span class="grow">${fmt(START)}</span><span>${el} / ${total} days · ${Math.round(st.km)} km logged</span></div></div>`;
+  let cur = '';
+  for (let n = dn(START); n <= dn(S.raceDate) + 7; n++) {
+    const d = ds(n), lab = weekLabel(d);
+    if (lab !== cur) { if (cur) h += '</div>'; h += `<div class="wk"><h4>${lab}</h4>`; cur = lab; }
+    const p = plan(d), s = dayStatus(d);
+    const icon = { done: '✅', 'partial-ok': '✅', rest: '💤', 'rest-today': '💤', partial: '🟡', missed: '❌', today: '⭐', future: '' }[s];
+    const main = p.tasks.filter(t => !(t.kind === 'strength' && p.tasks.length > 1));
+    const title = (main.length ? main : p.tasks).map(t => t.emoji + ' ' + t.title).join(' + ') + (p.tasks.some(t => t.kind === 'strength') && p.tasks.length > 1 ? ' + 💪' : '');
+    h += `<div class="day${d === T ? ' today' : ''}" data-a="day" data-d="${d}" id="${d === T ? 'todayRow' : ''}"><div class="dd">${fmt(d)}</div><div class="dt">${esc(title)}</div><div class="ds">${icon}</div></div>`;
+  }
+  h += '</div>';
+  return h;
+}
+
+function weekKm() {
+  const out = [];
+  for (let wk = 0; wk <= 15; wk++) {
+    const from = wk === 0 ? dn(START) : dn(W1) + (wk - 1) * 7;
+    const to = wk === 0 ? dn(W1) - 1 : from + 6;
+    let act = 0, pl = 0;
+    for (let n = from; n <= to; n++) {
+      const d = ds(n); if (n > dn(S.raceDate)) break;
+      for (const t of plan(d).tasks) { if (isRun(t) && t.km && !t.moved) pl += t.km; const r = tl(d, t.id); if (r && r.status === 'done' && r.km) act += +r.km; }
+    }
+    out.push({ wk, act, pl });
+  }
+  return out;
+}
+function viewStats() {
+  const st = stats(), x = xpTotal(), L = levelInfo(x);
+  const W = weekKm(); const max = Math.max(10, ...W.map(w => Math.max(w.act, w.pl)));
+  const bw = 18, gap = 5, H = 120;
+  const bars = W.map((w, i) => {
+    const xx = i * (bw + gap), hp = w.pl / max * H, ha = w.act / max * H;
+    return `<rect x="${xx}" y="${H - hp}" width="${bw}" height="${hp}" rx="4" fill="none" stroke="#3a4150" stroke-width="1.5"/>
+      <rect x="${xx + 3}" y="${H - ha}" width="${bw - 6}" height="${ha}" rx="3" fill="#ff6b2c"/>
+      <text x="${xx + bw / 2}" y="${H + 14}" font-size="9" fill="#9aa3b2" text-anchor="middle">${w.wk === 0 ? 'S' : w.wk === 15 ? 'R' : w.wk}</text>`;
+  }).join('');
+  const got = new Set(S.seen);
+  return `<div class="card lvl"><div class="e">${L.emoji}</div><div class="grow"><div class="muted small" style="font-weight:800">LEVEL ${L.i + 1}</div><h2>${L.name}</h2>
+      <div class="xpbar"><i style="width:${Math.round(L.pct * 100)}%"></i></div><div class="muted small" style="margin-top:6px">${x} XP${L.next ? ' · ' + (L.to - x) + ' XP to ' + L.next : ' · MAX LEVEL'}</div></div></div>
+    <div class="card"><div class="grid3">
+      <div class="stat"><b>${Math.round(st.km * 10) / 10}</b><span>km total</span></div>
+      <div class="stat"><b>${st.runs}</b><span>runs</span></div>
+      <div class="stat"><b>${hmin(st.min)}</b><span>on your feet</span></div>
+      <div class="stat"><b>${st.maxKm}</b><span>longest km</span></div>
+      <div class="stat"><b>${st.strength}</b><span>strength</span></div>
+      <div class="stat"><b>${st.best}</b><span>best streak</span></div></div></div>
+    <div class="card"><h3>📊 Weekly km</h3><p class="muted small" style="margin:0 0 8px">Outline = planned · orange = done (S = setup, R = race week)</p>
+      <svg viewBox="-2 0 ${W.length * (bw + gap)} ${H + 18}" width="100%">${bars}</svg></div>
+    <div class="card"><h3>🏅 Badges · ${got.size}/${BADGES.length}</h3><div class="badges">
+      ${BADGES.map(b => `<div class="bdg ${got.has(b[0]) ? '' : 'off'}" title="${esc(b[3])}"><div class="e">${b[1]}</div><div class="n">${b[2]}</div></div>`).join('')}</div></div>`;
+}
+
+const CHECK = [
+  ['off', 'Book Thu 7 Jan off work (and Fri 8th)'], ['loop', 'Plan a loop route past home (5 km or 10.5 km)'],
+  ['test', 'Test the loop on the 20 km run (Sat 5 Dec)'], ['gels', 'Find gels/snacks your stomach likes (long runs)'],
+  ['crew', 'Ask a friend to cycle alongside the 2nd half'], ['aid', 'Set up a home “aid station” (water, gels, spare top)'],
+  ['vis', 'Hi-vis + head torch for dark runs'], ['share', 'Set up live-location sharing'],
+  ['backup', 'Know your backup date (Sat 9 / Sun 10 Jan)'], ['cake', 'Order the finish-line birthday cake 🎂']
+];
+function viewGuide() {
+  const lapN = Math.ceil(raceKm() / (S.settings.loopKm || 5));
+  return `<div class="card"><h3>📖 Field guide</h3><p class="muted small" style="margin:0">Everything the coach knows, in one place.</p></div>
+  <details open><summary>🎮 How the game works</summary><div class="body">
+    <p>1. <b>Check in</b> each morning (sleep, legs, pain).<br>2. The <b>coach decides</b> today’s mission: as planned, shortened, swapped for a walk, or rest.<br>3. Press <b>▶ Start</b> and follow the voice (RUN / WALK), or do it with another app and <b>✍️ Log it</b>.<br>4. Earn <b>XP</b>, keep your <b>🔥 streak</b> (rest days count!), unlock <b>badges</b>.<br>5. Beat the two <b>boss battles</b> (Sun 25 Oct and Sun 22 Nov).</p>
+    <p>Missed Saturday’s long run? The coach offers to move it to Sunday or Monday. Log sharp pain and the coach enforces rest.</p></div></details>
+  <details><summary>🐢 The pace rule</summary><div class="body">About 90% of your running is at <b>conversational pace</b>, where you can talk in full sentences. If you’re gasping, walk. Slow running builds the engine for 42 km. Rate effort 1–10 when you log (RPE): easy runs should be <b>3–5</b>.</div></details>
+  <details><summary>💪 Strength routine (Wed + Sun)</summary><div class="body"><table>
+    <tr><td>Squats</td><td>×12</td></tr><tr><td>Reverse lunges</td><td>×10 each leg</td></tr><tr><td>Glute bridges</td><td>×15</td></tr>
+    <tr><td>Calf raises (slow)</td><td>×15</td></tr><tr><td>Plank</td><td>30–45 s</td></tr><tr><td>Side plank</td><td>20–30 s each side</td></tr></table>
+    <p>3 rounds, about 20 minutes. This is your best injury protection.</p></div></details>
+  <details><summary>🍌 Fuel &amp; water</summary><div class="body">Runs over 75–90 min: a gel or a handful of jelly babies every <b>30–40 min</b>, starting at 30 min. Sip water every 15–20 min. Night before a long run: carb-rich dinner (rice, pasta, roti). Morning: light breakfast 2–3 h before (toast + banana + honey, or porridge). <b>Nothing new on race day.</b></div></details>
+  <details><summary>🩹 Injury rules</summary><div class="body"><table>
+    <tr><td>Tired / muscle soreness</td><td>Normal: carry on</td></tr>
+    <tr><td>Pain that changes how you run</td><td>Stop. Rest 2–3 days</td></tr>
+    <tr><td>Sharp pain on a bone (shin, foot)</td><td>Stop. See a physio or doctor</td></tr>
+    <tr><td>Pain lasting 3+ days</td><td>See a physio</td></tr>
+    <tr><td>Ill below the neck (chest, fever)</td><td>Rest until better</td></tr>
+    <tr><td>Missed 1 week</td><td>Carry on; the coach eases you back in</td></tr></table></div></details>
+  <details><summary>❄️ Winter running</summary><div class="body">Dark evenings: hi-vis + head torch; a treadmill is fine for Tue/Thu. Cold: layers, gloves, hat, and warm up indoors. <b>Never run on ice</b>: swap to the treadmill or move the run a day. Christmas &amp; New Year are your taper, so keep runs easy and go easy on drinks.</div></details>
+  <details><summary>🏁 Race-day plan</summary><div class="body">
+    <p><b>Start 9:00</b> (sunrise ~8:05, sunset ~16:05) so you finish in daylight. Run 5 / walk 1 from the first minute. The first 10 km should feel too slow. Gel every 30–40 min. Km 30–35 is the wall, so shorten the intervals (3/1) but keep moving.</p>
+    <p><b>Your loop:</b> ${S.settings.loopKm} km × ${lapN} laps = ${raceKm()} km (the last lap is partial). Change the loop length in Me.</p>
+    <p><b>Backup:</b> ice, snow or a storm? Move to Sat 9 or Sun 10 Jan (Me → Race date). It’s still your birthday marathon.</p></div></details>
+  <details open><summary>✅ Birthday marathon checklist</summary><div class="body">
+    ${CHECK.map(c => `<button class="check ${S.raceChecklist[c[0]] ? 'on' : ''}" data-a="chk" data-k="${c[0]}"><span class="bx">${S.raceChecklist[c[0]] ? '✓' : ''}</span><span>${c[1]}</span></button>`).join('')}</div></details>`;
+}
+
+function viewMe() {
+  const s = S.settings;
+  const tog = (k, label) => `<button class="check ${s[k] ? 'on' : ''}" data-a="set" data-k="${k}"><span class="bx">${s[k] ? '✓' : ''}</span><span style="text-decoration:none;color:var(--text)">${label}</span></button>`;
+  return `<div class="card"><h3>👤 Profile</h3><label class="f">Name</label><input id="meName" value="${esc(S.name)}" maxlength="24"><button class="btn sm" style="margin-top:8px" data-a="save-name">Save name</button></div>
+  <div class="card"><h3>🎯 Goal</h3><div class="chips"><button class="chip ${S.mode === 'full' ? 'on' : ''}" data-a="mode" data-v="full">🏅 Marathon 42.2</button><button class="chip ${S.mode === 'half' ? 'on' : ''}" data-a="mode" data-v="half">🦸 Half 21.1</button></div>
+    <label class="f">Race date</label><div class="chips">${[['2027-01-07', 'Thu 7 Jan 🎂'], ['2027-01-09', 'Sat 9 Jan (backup)'], ['2027-01-10', 'Sun 10 Jan (backup)']].map(o => `<button class="chip ${S.raceDate === o[0] ? 'on' : ''}" data-a="race-move" data-to="${o[0]}">${o[1]}</button>`).join('')}</div>
+    <label class="f">Race loop length (km)</label><input id="loopKm" type="number" step="0.1" min="0.4" value="${s.loopKm}"><button class="btn sm" style="margin-top:8px" data-a="save-loop">Save loop</button></div>
+  <div class="card"><h3>🔊 Workout timer</h3>${tog('voice', '🗣️ Voice cues (“Run!”, “Walk”)')}${tog('beep', '🔔 Beeps')}${tog('vibrate', '📳 Vibration')}${tog('gps', '📍 GPS distance (beta, keep the screen on)')}</div>
+  <div class="card"><h3>⏰ Calendar reminders</h3><p class="muted small" style="margin:0 0 8px">Web apps can’t reliably send daily notifications, so add every mission to your phone’s calendar with an alarm.</p>
+    <label class="f">Reminder time</label><input id="remind" type="time" value="${s.remind}"><button class="btn primary block" style="margin-top:10px" data-a="ics">📅 Download calendar (.ics)</button></div>
+  <div class="card"><h3>💾 Backup</h3><p class="muted small" style="margin:0 0 8px">Progress lives only on this phone. Export a backup every week or two.</p>
+    <div class="row"><button class="btn grow" data-a="export">⬇️ Export</button><button class="btn grow" data-a="import">⬆️ Import</button></div>
+    <input id="importFile" type="file" accept="application/json,.json" style="display:none"></div>
+  <div class="card"><h3>📱 Install on your phone</h3><p class="small" style="margin:0"><b>iPhone:</b> open in Safari → Share → <b>Add to Home Screen</b>.<br><b>Android:</b> open in Chrome → ⋮ menu → <b>Install app</b> / Add to Home screen.</p></div>
+  <div class="card"><button class="btn block" style="color:#fda4af" data-a="reset">🗑️ Reset the game</button><p class="muted small" style="text-align:center;margin:10px 0 0">Road to 7 January · v1 · made with Claude Code</p></div>`;
+}
+
+function render() {
+  const app = $('#app');
+  if (!S.onboarded) { app.innerHTML = viewOnboard(); $('#nav').style.display = 'none'; return; }
+  $('#nav').style.display = '';
+  const V = { today: viewToday, journey: viewJourney, stats: viewStats, guide: viewGuide, me: viewMe }[TAB] || viewToday;
+  app.innerHTML = header() + `<div class="wrap">${V()}</div>`;
+  $('#nav').innerHTML = navBar();
+  if (TAB === 'journey') { const r = $('#todayRow'); if (r) r.scrollIntoView({ block: 'center' }); }
+}
+
+/* ---------------- sheets */
+function openSheet(html) { $('#sheetIn').innerHTML = html; $('#sheetBg').style.display = 'block'; requestAnimationFrame(() => $('#sheet').classList.add('open')); }
+function closeSheet() { $('#sheet').classList.remove('open'); $('#sheetBg').style.display = 'none'; }
+let toastT;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+const findTask = (d, id) => plan(d).tasks.find(t => t.id === id);
+
+let LOGP = {};
+function logSheet(d, t, pre) {
+  pre = pre || {};
+  LOGP = { d, id: t.id, pain: 'none', rpe: t.kind === 'race' ? 7 : 4 };
+  const runLike = isRun(t) || t.kind === 'walk';
+  let body = `<h3 style="font-size:20px">${t.emoji} ${esc(t.title)}</h3><p class="muted small">${fmtLong(d)}</p>`;
+  if (runLike) {
+    body += `<div class="row"><div class="grow"><label class="f">Distance (km)</label><input id="lgKm" type="number" inputmode="decimal" step="0.1" min="0" value="${pre.km ?? (t.km || '')}"></div>
+      <div class="grow"><label class="f">Time (minutes)</label><input id="lgMin" type="number" inputmode="numeric" step="1" min="0" value="${pre.min ?? (t.min || '')}"></div></div>`;
+    if (t.kind !== 'walk') body += `<label class="f">Effort (RPE): <span id="rpeV">${LOGP.rpe}</span>/10</label><input id="lgRpe" type="range" min="1" max="10" value="${LOGP.rpe}" data-a="noop"><div class="rpe"><span>1 very easy</span><span>5 steady</span><span>10 max</span></div>`;
+    body += `<label class="f">Any pain?</label><div class="chips"><button class="chip on" data-a="lgpain" data-v="none">✅ None</button><button class="chip" data-a="lgpain" data-v="niggle">⚠️ Niggle</button><button class="chip" data-a="lgpain" data-v="sharp">🚨 Sharp</button></div>`;
+  } else if (t.kind === 'strength') {
+    body += `<label class="f">Rounds completed</label><input id="lgRounds" type="number" min="1" max="3" value="${pre.rounds || (t.light ? 1 : 3)}">`;
+  }
+  body += `<label class="f">Note (optional)</label><textarea id="lgNote" rows="2" placeholder="How did it feel?"></textarea>
+    <button class="btn primary block" style="margin-top:14px;padding:15px" data-a="log-save">✅ Save · +${t.xp} XP</button>`;
+  openSheet(body);
+  const r = $('#lgRpe'); if (r) r.oninput = () => { LOGP.rpe = +r.value; $('#rpeV').textContent = r.value; };
+}
+function completeTask(d, t, data) {
+  const before = levelInfo(xpTotal()).i;
+  let xp = t.xp;
+  if (t.kind === 'strength' && data.rounds !== undefined && data.rounds < (t.light ? 1 : 2)) xp = Math.round(xp / 2);
+  const L = LG(d);
+  L.tasks[t.id] = Object.assign({ status: 'done', kind: t.kind, title: t.title, xp, at: Date.now() }, data);
+  const msgs = [];
+  if (data.pain === 'sharp') { S.injuryUntil = add(d, 2); if (!S.injuryStart) S.injuryStart = d; msgs.push('🚨 Sharp pain logged. The coach will enforce rest for the next 2 days. See a physio if it’s on a bone or lasts 3+ days.'); }
+  else if (data.pain === 'niggle') msgs.push('⚠️ Niggle noted. Tomorrow’s check-in will decide what you do.');
+  if (isRun(t) && t.kind !== 'race' && data.rpe >= 8) msgs.push(`🐢 RPE ${data.rpe}: too hard! Easy runs should feel 3–5/10. Slower = further.`);
+  if (isRun(t) && t.km && data.km && data.km < t.km * 0.7 && t.kind !== 'race') msgs.push('Shorter than planned, no drama. Consistency beats heroics.');
+  if (t.kind === 'race') msgs.push(`🎂🏁 ${S.name ? esc(S.name) + ', you' : 'You'} are a ${t.km > 40 ? 'MARATHONER' : 'HALF MARATHONER'}. Happy birthday!`);
+  save();
+  const after = levelInfo(xpTotal());
+  celebrate(xp, msgs, after.i > before ? after : null, newBadges(), t.kind === 'race');
+}
+function celebrate(xp, msgs, lvUp, badges, big) {
+  confetti(big ? 400 : 140);
+  buzz([60, 40, 60]);
+  let h = `<div class="celebrate"><div style="font-size:56px">${big ? '🏅' : '🎉'}</div><div class="xpbig">+${xp} XP</div>`;
+  if (lvUp) h += `<div class="card" style="border-color:var(--gold)"><div style="font-size:40px">${lvUp.emoji}</div><h3>LEVEL UP! You’re now a ${lvUp.name}</h3></div>`;
+  if (badges && badges.length) h += `<div class="card"><h3>New badge${badges.length > 1 ? 's' : ''}!</h3>${badges.map(b => `<div style="margin-top:8px"><span style="font-size:30px">${b[1]}</span> <b>${b[2]}</b><div class="muted small">${b[3]}</div></div>`).join('')}</div>`;
+  if (msgs.length) h += `<div class="card" style="text-align:left"><h3>🧠 Coach</h3>${msgs.map(m => `<p style="margin:6px 0">${m}</p>`).join('')}</div>`;
+  h += `<button class="btn primary block" style="margin-top:14px" data-a="sheet-close">Nice 💪</button></div>`;
+  openSheet(h); render();
+}
+function skipSheet(d, t) {
+  LOGP = { d, id: t.id, reason: '' };
+  openSheet(`<h3 style="font-size:20px">Skip: ${esc(t.title)}?</h3><p class="muted small">Be honest. The coach adapts.</p>
+    <div class="chips">${[['busy', '📅 Busy'], ['tired', '😴 Too tired'], ['ill', '🤒 Ill'], ['injured', '🤕 Injured'], ['weather', '🌧️ Weather'], ['other', '🤷 Other']].map(o => `<button class="chip" data-a="skip-reason" data-v="${o[0]}">${o[1]}</button>`).join('')}</div>
+    <button class="btn block" data-a="skip-save">Skip it</button>`);
+}
+const SKIP_MSG = {
+  busy: '📅 Life happens. Even 15 minutes counts next time. Tomorrow is a new day.',
+  tired: '😴 Listening to your body is smart. Early night, and check in tomorrow.',
+  ill: '🤒 Rule: above the neck (runny nose) → an easy walk is OK. Below the neck (chest, fever) → rest until better. The coach has scheduled rest for tomorrow.',
+  injured: '🤕 Injury protocol on: rest for 2 days. See a physio if it’s on a bone or lasts 3+ days.',
+  weather: '🌧️ A treadmill counts! Or the coach can move a long run to tomorrow.',
+  other: '👍 Noted. Consistency over the weeks is what matters.'
+};
+
+/* strength circuit */
+const EX = [['Squats', '×12'], ['Reverse lunges', '×10/leg'], ['Glute bridges', '×15'], ['Calf raises', '×15 slow'], ['Plank', '30–45 s'], ['Side plank', '20–30 s/side']];
+let STR = {};
+function strSheet(d, t) {
+  const rounds = t.light ? 2 : 3;
+  STR = { d, id: t.id, rounds, done: {} };
+  drawStr(t);
+}
+function drawStr(t) {
+  t = t || findTask(STR.d, STR.id);
+  let g = `<h3 style="font-size:20px">💪 ${esc(t.title)}</h3><p class="muted small">Tap each box as you finish it. Rest 30–60 s between rounds.</p>
+    <table style="width:100%;border-collapse:collapse;margin-top:8px"><tr><td></td>${Array.from({ length: STR.rounds }, (_, i) => `<td class="muted small" style="text-align:center;font-weight:800">R${i + 1}</td>`).join('')}</tr>`;
+  EX.forEach((e, i) => {
+    g += `<tr><td style="padding:8px 0"><b>${e[0]}</b><div class="muted small">${e[1]}</div></td>${Array.from({ length: STR.rounds }, (_, r) => { const k = i + '-' + r, on = STR.done[k]; return `<td style="text-align:center"><button class="check ${on ? 'on' : ''}" style="border:0;justify-content:center;padding:6px" data-a="str-cell" data-k="${k}"><span class="bx">${on ? '✓' : ''}</span></button></td>`; }).join('')}</tr>`;
+  });
+  g += `</table><button class="btn primary block" style="margin-top:14px;padding:15px" data-a="str-done">✅ Finish circuit</button>`;
+  openSheet(g);
+}
+
+/* prep checklist */
+let PREP = {};
+function prepSheet(d, t) {
+  PREP = { d, id: t.id, done: (S.logs[d] && S.logs[d]['prep_' + t.id]) || {} };
+  drawPrep(t);
+}
+function drawPrep(t) {
+  t = t || findTask(PREP.d, PREP.id);
+  openSheet(`<h3 style="font-size:20px">${t.emoji} ${esc(t.title)}</h3>
+    ${t.items.map((it, i) => `<button class="check ${PREP.done[i] ? 'on' : ''}" data-a="prep-item" data-k="${i}"><span class="bx">${PREP.done[i] ? '✓' : ''}</span><span>${esc(it)}</span></button>`).join('')}
+    <button class="btn primary block" style="margin-top:14px;padding:15px" data-a="prep-done">✅ Done · +${t.xp} XP</button>`);
+}
+
+/* boss battles */
+function bossAuto(n) {
+  if (n === 1) {
+    let need = 0, done = 0;
+    for (let k = dn('2026-10-12'); k <= dn('2026-10-25'); k++) { const d = ds(k); for (const t of plan(d).tasks) if (isRun(t)) { need++; if (isDone(d, t)) done++; } }
+    return { ok: need ? done / need >= 0.5 : false, text: `You completed ${done} of ${need} runs in weeks 3–4.` };
+  }
+  const sat = '2026-11-21'; const t = plan(sat).tasks.find(isLongT);
+  let r = t && tl(sat, t.id);
+  if (t && t.moved) r = tl(t.moved, t.moved + '#m');
+  const ok = !!r && r.status === 'done' && (+r.km || 0) >= 9;
+  return { ok, text: ok ? `You logged ${r.km} km on the 10 km long run. ✅` : 'The 10 km long run (Sat 21 Nov) isn’t logged as done.' };
+}
+let BOSS = {};
+function bossSheet(d, t) {
+  const n = t.n, a = bossAuto(n);
+  BOSS = { d, id: t.id, n, a, ans: {} };
+  const qs = n === 1
+    ? [['q1', 'Can you jog 20–30 minutes with only short walk breaks?'], ['q2', 'Any pain that has lasted more than 3 days?']]
+    : [['q1', 'Did the 10 km feel comfortable (you could have kept going)?'], ['q2', 'Any pain that has lasted more than 3 days?']];
+  openSheet(`<div style="text-align:center;font-size:64px">${t.emoji}</div><h3 style="text-align:center;font-size:22px">Checkpoint ${n}: ${n === 1 ? 'The Habit Guardian' : 'The 10K Dragon'}</h3>
+    <p class="muted small" style="text-align:center">The boss checks you’re ready for what comes next.</p>
+    <div class="card" style="margin-top:8px"><b>📜 The record says:</b> ${esc(a.text)}</div>
+    ${qs.map(q => `<div class="q" style="margin-top:12px">${q[1]}</div><div class="chips"><button class="chip" data-a="boss-ans" data-k="${q[0]}" data-v="yes">Yes</button><button class="chip" data-a="boss-ans" data-k="${q[0]}" data-v="no">No</button></div>`).join('')}
+    <button class="btn primary block" style="padding:15px" data-a="boss-fight">⚔️ Fight!</button>`);
+}
+function bossResult() {
+  const { n, a, ans } = BOSS;
+  const pass = a.ok && ans.q1 === 'yes' && ans.q2 === 'no';
+  if (pass) {
+    S.bosses[n] = { result: 'pass', d: today() };
+    completeTask(BOSS.d, findTask(BOSS.d, BOSS.id), {});
+    return;
+  }
+  const why = [];
+  if (!a.ok) why.push(n === 1 ? 'Fewer than half of the week 3–4 runs were done.' : 'The 10 km long run isn’t done.');
+  if (ans.q1 !== 'yes') why.push(n === 1 ? 'You can’t yet jog 20–30 min with short breaks.' : 'The 10 km didn’t feel comfortable.');
+  if (ans.q2 !== 'no') why.push('Pain lasting 3+ days needs a physio check first.');
+  openSheet(`<div style="text-align:center;font-size:56px">💥</div><h3 style="text-align:center">The boss won this round</h3>
+    <div class="card"><ul style="margin:0;padding-left:18px">${why.map(w => `<li>${w}</li>`).join('')}</ul></div>
+    <p>This isn’t failure; it’s the coach keeping you safe. Choose your path:</p>
+    ${S.mode === 'full' ? `<button class="btn primary block" data-a="boss-choice" data-v="half">🦸 Switch to a Birthday HALF marathon (recommended)</button>` : ''}
+    <button class="btn block" style="margin-top:10px" data-a="boss-choice" data-v="stay">${S.mode === 'full' ? '🏅 Stay on the full marathon (I accept the risk)' : '👍 Keep going'}</button>`);
+}
+
+/* ---------------- workout timer */
+let PH = [], tInt = null, lastBeep = -1, wl = null, geoId = null, lastPos = null, lastSave = 0;
+function phasesFor(t, mode) {
+  const P = [], s = x => Math.round(x * 60);
+  if (t.kind === 'intervals') {
+    const v = t.iv;
+    P.push({ type: 'walk', sec: s(v.warm), label: 'WARM-UP', say: 'Warm up. Brisk walk for five minutes.' });
+    for (let i = 1; i <= v.reps; i++) {
+      P.push({ type: 'run', sec: s(v.run), label: 'RUN', rep: i, of: v.reps, say: i === v.reps ? 'Last run! Go.' : 'Run.' });
+      if (i < v.reps) P.push({ type: 'walk', sec: s(v.walk), label: 'WALK', rep: i, of: v.reps, say: 'Walk.' });
+    }
+    P.push({ type: 'walk', sec: s(v.cool), label: 'COOL-DOWN', say: 'Great work. Cool down, walk for five minutes.' });
+    return P;
+  }
+  if (t.kind === 'walk') { P.push({ type: 'walk', sec: s(t.min), label: 'WALK', say: 'Brisk walk. Go.' }); return P; }
+  if (t.kind !== 'race') P.push({ type: 'walk', sec: 300, label: 'WARM-UP', say: 'Warm up. Brisk walk for five minutes.' });
+  if (mode === 'cont') { P.push({ type: 'run', sec: s(t.min || Math.max(20, (t.km || 5) * 8)), label: 'RUN', say: 'Easy run. Conversational pace.' }); return P; }
+  for (let i = 1; i <= 300; i++) { P.push({ type: 'run', sec: 300, label: 'RUN', rep: i, say: 'Run.' }); P.push({ type: 'walk', sec: 60, label: 'WALK', rep: i, say: 'Walk. One minute.' }); }
+  return P;
+}
+const fuelOn = t => t.kind === 'race' || (t.kind === 'long' && (t.km || 0) >= 12);
+function startTimer(d, t, mode) {
+  audio(); // unlock audio on this tap
+  S.timer = { d, id: t.id, task: t, mode: mode || 'rw', start: Date.now(), paused: null, pausedMs: 0, skipMs: 0, idx: -1, fuel: 0, laps: 0, gps: 0 };
+  save(); openTimer();
+}
+function openTimer() {
+  const T = S.timer; if (!T) return;
+  PH = phasesFor(T.task, T.mode);
+  const el = $('#timer');
+  const showLap = T.task.kind === 'race' || isLongT(T.task);
+  el.innerHTML = `<div class="tm"><div class="tm-top"><button data-a="t-cancel" aria-label="Cancel">✕</button><div class="tm-title">${T.task.emoji} ${esc(T.task.title)}</div><button data-a="t-sound" aria-label="Sound">${S.settings.voice ? '🔊' : '🔇'}</button></div>
+    <div class="tm-mid"><div class="tm-phase" id="tmP">GO</div><div class="tm-count" id="tmC">00:00</div><div class="tm-sub" id="tmS"></div><div class="tm-bar"><i id="tmB"></i></div>
+    <div class="tm-grid"><div><b id="tmE">00:00</b><span>total time</span></div><div><b id="tmK">–</b><span>km</span></div><div><b id="tmF">–</b><span>${fuelOn(T.task) ? 'next fuel' : 'target'}</span></div></div></div>
+    <div class="tm-btns"><button data-a="t-pause" id="tmPause">⏸ Pause</button><button data-a="t-skip">⏭ Skip</button>
+    ${showLap ? `<button class="wide" data-a="t-lap">🔁 Loop done (+${S.settings.loopKm} km)</button>` : ''}
+    <button class="primary wide" data-a="t-finish">✅ Finish &amp; log</button></div>
+    <p class="tm-tip">Keep this screen open. It stays awake and speaks your cues.</p></div>`;
+  el.style.display = 'block';
+  wakeOn(); gpsStart();
+  clearInterval(tInt); tInt = setInterval(tick, 250); tick();
+}
+const tEl = () => { const T = S.timer; return (T.paused || Date.now()) - T.start - T.pausedMs; };
+function tick() {
+  const T = S.timer; if (!T) return;
+  const el = tEl(), eff = el + T.skipMs;
+  let acc = 0, idx = PH.length, rem = 0, dur = 1;
+  for (let i = 0; i < PH.length; i++) { const L = PH[i].sec * 1000; if (eff < acc + L) { idx = i; rem = acc + L - eff; dur = L; break; } acc += L; }
+  if (idx !== T.idx) {
+    const first = T.idx === -1; T.idx = idx; save();
+    if (idx < PH.length) { const p = PH[idx]; say(p.say); beep(p.type === 'run' ? 880 : 520, .25); beep(p.type === 'run' ? 1175 : 440, .25, .3); buzz(p.type === 'run' ? [300, 100, 300] : [500]); }
+    else if (!first || el > 1000) { say('Workout complete. Amazing job! Press finish to log it.'); beep(784, .2); beep(988, .2, .22); beep(1319, .4, .44); buzz([200, 80, 200, 80, 400]); }
+  }
+  if (!T.paused && idx < PH.length) { const sLeft = Math.ceil(rem / 1000); if (sLeft <= 3 && sLeft >= 1 && sLeft !== lastBeep) { lastBeep = sLeft; beep(660, .07); } }
+  if (fuelOn(T.task) && !T.paused) {
+    const m = el / 60000, due = m >= 30 ? Math.floor((m - 30) / 35) + 1 : 0;
+    if (due > T.fuel) { T.fuel = due; save(); say('Fuel time. Take a gel and some water.'); buzz([150, 80, 150, 80, 150]); toast('🍌 Fuel time: gel + water'); }
+  }
+  if (Date.now() - lastSave > 10000) { lastSave = Date.now(); save(); }
+  // draw
+  const tm = $('#timer'), p = PH[idx];
+  tm.className = T.paused ? 'paused' : (idx >= PH.length ? 'done' : (p.type === 'walk' ? 'walk' : ''));
+  $('#tmP').textContent = T.paused ? 'PAUSED' : (idx >= PH.length ? 'DONE 🎉' : p.label);
+  $('#tmC').textContent = idx >= PH.length ? '+' + hms(eff - acc) : hms(rem + 999);
+  let sub = '';
+  if (idx < PH.length) {
+    if (p.rep && p.of) sub = `Round ${p.rep} of ${p.of}`; else if (p.rep) sub = `Round ${p.rep}`;
+    const nx = PH[idx + 1]; if (nx) sub += (sub ? ' · ' : '') + `next: ${nx.label} ${hms(nx.sec * 1000)}`;
+  } else sub = 'Target reached. Keep going or press Finish.';
+  $('#tmS').textContent = sub;
+  $('#tmB').style.width = (idx >= PH.length ? 100 : (1 - rem / dur) * 100) + '%';
+  $('#tmE').textContent = hms(el);
+  const km = T.gps > 0 ? T.gps : T.laps * S.settings.loopKm;
+  $('#tmK').textContent = km > 0 ? (Math.round(km * 100) / 100) : (T.task.km ? '/' + T.task.km : '–');
+  if (fuelOn(T.task)) { const nextAt = (30 + 35 * T.fuel) * 60000; $('#tmF').textContent = hms(nextAt - el); }
+  else $('#tmF').textContent = T.task.km ? T.task.km + ' km' : (T.task.min ? T.task.min + ' min' : '–');
+  $('#tmPause').textContent = T.paused ? '▶ Resume' : '⏸ Pause';
+}
+function stopTimerRuntime() { clearInterval(tInt); tInt = null; wakeOff(); gpsStop(); $('#timer').style.display = 'none'; try { speechSynthesis.cancel(); } catch (e) {} }
+async function wakeOn() { try { if ('wakeLock' in navigator) { wl = await navigator.wakeLock.request('screen'); } } catch (e) {} }
+function wakeOff() { try { wl && wl.release(); } catch (e) {} wl = null; }
+function hav(a, b) { const R = 6371, r = x => x * Math.PI / 180; const dLa = r(b[0] - a[0]), dLo = r(b[1] - a[1]); const h = Math.sin(dLa / 2) ** 2 + Math.cos(r(a[0])) * Math.cos(r(b[0])) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); }
+function gpsStart() {
+  if (!S.settings.gps || !navigator.geolocation || geoId !== null) return;
+  lastPos = null;
+  geoId = navigator.geolocation.watchPosition(p => {
+    const T = S.timer; if (!T || T.paused) { lastPos = null; return; }
+    const { latitude: la, longitude: lo, accuracy: ac } = p.coords; if (ac > 35) return;
+    if (lastPos) { const k = hav(lastPos, [la, lo]); if (k > 0.004 && k < 0.25) T.gps = (T.gps || 0) + k; else if (k < 0.004) return; }
+    lastPos = [la, lo];
+  }, e => toast('📍 GPS: ' + e.message), { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+}
+function gpsStop() { if (geoId !== null && navigator.geolocation) navigator.geolocation.clearWatch(geoId); geoId = null; lastPos = null; }
+
+/* sound */
+let AC = null;
+function audio() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (AC && AC.state === 'suspended') AC.resume(); return AC; }
+function beep(f, d, when) {
+  if (!S.settings.beep) return; const a = audio(); if (!a) return; when = when || 0;
+  const o = a.createOscillator(), g = a.createGain(), t0 = a.currentTime + when;
+  o.type = 'sine'; o.frequency.value = f || 880;
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.5, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + (d || .15));
+  o.connect(g); g.connect(a.destination); o.start(t0); o.stop(t0 + (d || .15) + 0.03);
+}
+function say(txt) { if (!S.settings.voice || !('speechSynthesis' in window) || !txt) return; try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.rate = 1.05; u.lang = 'en-GB'; speechSynthesis.speak(u); } catch (e) {} }
+function buzz(p) { if (S.settings.vibrate && navigator.vibrate) try { navigator.vibrate(p); } catch (e) {} }
+
+/* confetti */
+function confetti(n) {
+  const c = $('#fx'), x = c.getContext('2d'); c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio; x.scale(devicePixelRatio, devicePixelRatio);
+  const cols = ['#ff6b2c', '#fbbf24', '#a3e635', '#38bdf8', '#a78bfa', '#f43f5e'];
+  const P = Array.from({ length: n }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .35, vx: (Math.random() - .5) * 12, vy: -Math.random() * 12 - 4, s: 5 + Math.random() * 6, c: cols[Math.random() * cols.length | 0], r: Math.random() * 6, vr: (Math.random() - .5) * .3 }));
+  let f = 0;
+  (function fr() {
+    x.clearRect(0, 0, innerWidth, innerHeight);
+    P.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .35; p.vx *= .99; p.r += p.vr; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); x.restore(); });
+    if (++f < 150) requestAnimationFrame(fr); else x.clearRect(0, 0, innerWidth, innerHeight);
+  })();
+}
+
+/* calendar export */
+function icsExport() {
+  const tm = ($('#remind') && $('#remind').value) || S.settings.remind || '07:00';
+  S.settings.remind = tm; save();
+  const [hh, mm] = tm.split(':');
+  const esI = s => String(s).replace(/[\\;,]/g, m => '\\' + m).replace(/\n/g, '\\n');
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Road to 7 January//EN', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:Road to 7 January'];
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  for (let n = Math.max(dn(START), dn(today())); n <= dn(S.raceDate); n++) {
+    const d = ds(n), p = basePlan(d);
+    const main = p.tasks.filter(t => t.kind !== 'rest');
+    if (!main.length) continue;
+    const dt = d.replace(/-/g, '') + 'T' + hh + mm + '00';
+    const summary = (d === S.raceDate ? '🎂🏁 ' : '🏃 ') + main.map(t => t.title).join(' + ');
+    lines.push('BEGIN:VEVENT', 'UID:' + d + '@road7jan', 'DTSTAMP:' + stamp, 'DTSTART:' + dt, 'DURATION:PT' + (d === S.raceDate ? '6H' : '45M'),
+      'SUMMARY:' + esI(summary), 'DESCRIPTION:' + esI(main.map(t => t.title + ': ' + describe(t)).join('\n') + '\nOpen the Road to 7 January app to check in.'),
+      'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esI(summary), 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT');
+  }
+  lines.push('END:VCALENDAR');
+  download('road-to-7-january.ics', lines.join('\r\n'), 'text/calendar');
+}
+function download(name, text, type) {
+  const b = new Blob([text], { type }); const a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+/* ---------------- actions */
+const A = {
+  'sheet-close': () => closeSheet(),
+  tab: el => { TAB = el.dataset.t; render(); scrollTo(0, 0); if (TAB === 'journey') { const r = $('#todayRow'); if (r) r.scrollIntoView({ block: 'center' }); } },
+  'ob-mode': el => { S.mode = el.dataset.v; const n = $('#obName'); if (n) S.name = n.value.trim(); render(); },
+  'ob-go': () => { S.name = ($('#obName').value || '').trim(); S.onboarded = true; if (!S.created || dn(S.created) > dn(today())) S.created = today(); save(); render(); confetti(160); toast('🔥 Game on! Do your first check-in.'); },
+  ci: el => { CI[el.dataset.k] = el.dataset.v; el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === el)); },
+  'ci-submit': () => {
+    if (!CI.sleep || !CI.legs || !CI.pain) { toast('Answer all 3 questions'); return; }
+    const d = today(), v = verdict(d, CI), L = LG(d);
+    L.ci = Object.assign({ at: Date.now() }, CI); L.adj = v.adj; L.verdict = { level: v.level, msgs: v.msgs };
+    CI = {}; save(); render(); buzz([40]);
+    toast(v.level === 'green' ? '✅ Orders received' : v.level === 'amber' ? '🟡 Mission adjusted' : '🛑 Rest ordered');
+  },
+  'ci-redo': () => { const L = S.logs[today()]; if (L) { delete L.ci; delete L.adj; delete L.verdict; save(); } render(); },
+  start: el => {
+    const d = el.dataset.d, t = findTask(d, el.dataset.id); if (!t) return;
+    if (t.kind === 'run') {
+      openSheet(`<h3 style="font-size:20px">${t.emoji} ${esc(t.title)}</h3><p class="muted">How do you want to run it?</p>
+        <button class="btn primary block" style="padding:15px" data-a="start-mode" data-d="${d}" data-id="${t.id}" data-m="rw">🏃🚶 Run 5 min / walk 1 min</button>
+        <button class="btn block" style="padding:15px;margin-top:10px" data-a="start-mode" data-d="${d}" data-id="${t.id}" data-m="cont">🏃 Continuous easy run</button>`);
+    } else startTimer(d, t, 'rw');
+  },
+  'start-mode': el => { closeSheet(); startTimer(el.dataset.d, findTask(el.dataset.d, el.dataset.id), el.dataset.m); },
+  log: el => { const t = findTask(el.dataset.d, el.dataset.id); if (t) logSheet(el.dataset.d, t); },
+  lgpain: el => { LOGP.pain = el.dataset.v; el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === el)); },
+  'log-save': () => {
+    const t = findTask(LOGP.d, LOGP.id); if (!t) return closeSheet();
+    const data = {};
+    const km = $('#lgKm'), mn = $('#lgMin'), rd = $('#lgRounds'), nt = $('#lgNote');
+    if (km && km.value !== '') data.km = Math.round(parseFloat(km.value) * 100) / 100;
+    if (mn && mn.value !== '') data.min = Math.round(parseFloat(mn.value));
+    if ($('#lgRpe')) data.rpe = LOGP.rpe;
+    if (km) data.pain = LOGP.pain;
+    if (rd) data.rounds = clamp(parseInt(rd.value || '0', 10), 0, 3);
+    if (nt && nt.value.trim()) data.note = nt.value.trim();
+    if (isRun(t) && !data.km && !data.min) { toast('Add distance or time'); return; }
+    completeTask(LOGP.d, t, data);
+  },
+  skip: el => { const t = findTask(el.dataset.d, el.dataset.id); if (t) skipSheet(el.dataset.d, t); },
+  'skip-reason': el => { LOGP.reason = el.dataset.v; el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === el)); },
+  'skip-save': () => {
+    if (!LOGP.reason) { toast('Pick a reason'); return; }
+    const t = findTask(LOGP.d, LOGP.id); if (!t) return closeSheet();
+    LG(LOGP.d).tasks[t.id] = { status: 'skipped', reason: LOGP.reason, kind: t.kind, title: t.title, at: Date.now() };
+    if (LOGP.reason === 'injured') { S.injuryUntil = add(LOGP.d, 2); if (!S.injuryStart) S.injuryStart = LOGP.d; }
+    if (LOGP.reason === 'ill') S.injuryUntil = add(LOGP.d, 1);
+    save(); closeSheet(); render();
+    openSheet(`<h3>🧠 Coach</h3><p>${SKIP_MSG[LOGP.reason]}</p><button class="btn primary block" data-a="sheet-close">OK</button>`);
+  },
+  undo: el => { const L = S.logs[el.dataset.d]; if (L && L.tasks) delete L.tasks[el.dataset.id]; save(); closeSheet(); render(); toast('Undone'); },
+  claim: el => {
+    const d = el.dataset.d, t = findTask(d, el.dataset.id); if (!t) return;
+    completeTask(d, t, {});
+  },
+  day: el => {
+    const d = el.dataset.d, p = plan(d), T = today();
+    const L = S.logs[d];
+    openSheet(`<h3 style="font-size:20px">${fmtLong(d)}</h3><p class="muted small">${esc(p.phase)}${p.note ? ' · ' + esc(p.note) : ''}</p>
+      ${L && L.verdict ? `<div class="card verdict ${L.verdict.level}" style="margin-top:6px"><b>Coach said:</b><ul>${L.verdict.msgs.filter(m => m !== 'BACKUP').map(m => `<li>${esc(m)}</li>`).join('')}</ul></div>` : ''}
+      ${p.tasks.map(t => taskCard(d, t, { locked: d === T && !(L && L.ci) && dn(d) >= dn(START) })).join('')}
+      ${dn(d) < dn(T) ? '<p class="muted small" style="margin-top:12px">Forgot to log a past day? You can back-fill it here.</p>' : ''}`);
+  },
+  'move-long': el => { const d = today(), from = el.dataset.from; LG(d).moveLong = from; LG(from).movedTo = d; save(); render(); toast('⛰️ Long run moved to today'); },
+  'no-move': () => { LG(today()).noMove = true; save(); render(); },
+  str: el => { const t = findTask(el.dataset.d, el.dataset.id); if (t) strSheet(el.dataset.d, t); },
+  'str-cell': el => { STR.done[el.dataset.k] = !STR.done[el.dataset.k]; drawStr(); },
+  'str-done': () => {
+    const t = findTask(STR.d, STR.id); if (!t) return closeSheet();
+    let rounds = 0; for (let r = 0; r < STR.rounds; r++) if (EX.every((_, i) => STR.done[i + '-' + r])) rounds++;
+    if (rounds === 0 && !Object.keys(STR.done).length) { toast('Tick the exercises as you go'); return; }
+    completeTask(STR.d, t, { rounds: Math.max(rounds, 1) });
+  },
+  prep: el => { const t = findTask(el.dataset.d, el.dataset.id); if (t) prepSheet(el.dataset.d, t); },
+  'prep-item': el => { const k = el.dataset.k; PREP.done[k] = !PREP.done[k]; LG(PREP.d)['prep_' + PREP.id] = PREP.done; save(); drawPrep(); },
+  'prep-done': () => { const t = findTask(PREP.d, PREP.id); if (t) completeTask(PREP.d, t, { items: Object.values(PREP.done).filter(Boolean).length }); },
+  boss: el => { const t = findTask(el.dataset.d, el.dataset.id); if (t) bossSheet(el.dataset.d, t); },
+  'boss-ans': el => { BOSS.ans[el.dataset.k] = el.dataset.v; el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === el)); },
+  'boss-fight': () => { if (!BOSS.ans.q1 || !BOSS.ans.q2) { toast('Answer both questions'); return; } bossResult(); },
+  'boss-choice': el => {
+    const { n, d, id } = BOSS; const t = findTask(d, id);
+    S.bosses[n] = { result: 'fail', d: today(), choice: el.dataset.v };
+    if (el.dataset.v === 'half') S.mode = 'half'; else S.riskAccepted = true;
+    const tt = Object.assign({}, t, { xp: 150 });
+    completeTask(d, tt, {});
+    if (el.dataset.v === 'half') toast('🦸 New goal: Birthday Half Marathon');
+  },
+  chk: el => { const k = el.dataset.k; S.raceChecklist[k] = !S.raceChecklist[k]; save(); render(); },
+  'race-move': el => {
+    const to = el.dataset.to;
+    if (to === S.raceDate) return;
+    if (!confirm('Set your race day to ' + fmtLong(to) + '?')) return;
+    S.raceDate = to; save(); closeSheet(); render(); toast('🏁 Race day: ' + fmt(to));
+  },
+  mode: el => {
+    const v = el.dataset.v; if (v === S.mode) return;
+    if (!confirm(v === 'half' ? 'Switch to the Birthday HALF marathon (21.1 km)? Long runs will be capped.' : 'Switch to the FULL marathon (42.2 km)?')) return;
+    S.mode = v; save(); render();
+  },
+  set: el => { const k = el.dataset.k; S.settings[k] = !S.settings[k]; save(); render(); if (k === 'gps' && S.settings.gps && navigator.geolocation) navigator.geolocation.getCurrentPosition(() => toast('📍 GPS ready'), e => toast('📍 ' + e.message)); },
+  'save-name': () => { S.name = $('#meName').value.trim(); save(); render(); toast('Saved'); },
+  'save-loop': () => { const v = parseFloat($('#loopKm').value); if (v > 0.2) { S.settings.loopKm = Math.round(v * 100) / 100; save(); render(); toast('Loop: ' + S.settings.loopKm + ' km'); } },
+  ics: () => icsExport(),
+  export: () => download('road-to-7-jan-backup-' + today() + '.json', JSON.stringify(S, null, 1), 'application/json'),
+  import: () => { const f = $('#importFile'); f.onchange = () => { const file = f.files[0]; if (!file) return; const r = new FileReader(); r.onload = () => { try { const o = JSON.parse(r.result); if (!o || typeof o.logs !== 'object') throw 0; if (!confirm('Replace this phone’s progress with the backup?')) return; S = Object.assign(defState(), o); S.settings = Object.assign(defState().settings, o.settings || {}); save(); render(); toast('✅ Backup restored'); } catch (e) { toast('❌ Not a valid backup file'); } }; r.readAsText(file); }; f.click(); },
+  reset: () => { if (confirm('Delete ALL progress and start again?') && confirm('Really? This cannot be undone.')) { localStorage.removeItem(KEY); S = defState(); TAB = 'today'; save(); render(); } },
+  't-pause': () => { const T = S.timer; if (!T) return; if (T.paused) { T.pausedMs += Date.now() - T.paused; T.paused = null; say('Resume.'); wakeOn(); } else { T.paused = Date.now(); say('Paused.'); } save(); tick(); },
+  't-skip': () => { const T = S.timer; if (!T) return; const eff = tEl() + T.skipMs; let acc = 0; for (const p of PH) { acc += p.sec * 1000; if (eff < acc) { T.skipMs += acc - eff; break; } } save(); tick(); },
+  't-lap': () => { const T = S.timer; if (!T) return; T.laps++; save(); say('Loop ' + T.laps + ' done. ' + Math.round(T.laps * S.settings.loopKm * 10) / 10 + ' kilometres.'); buzz([80]); tick(); },
+  't-sound': el => { S.settings.voice = !S.settings.voice; S.settings.beep = S.settings.voice; save(); el.textContent = S.settings.voice ? '🔊' : '🔇'; },
+  't-finish': () => {
+    const T = S.timer; if (!T) return;
+    const min = Math.max(1, Math.round(tEl() / 60000));
+    const km = T.gps > 0 ? Math.round(T.gps * 100) / 100 : (T.laps ? Math.round(T.laps * S.settings.loopKm * 100) / 100 : (T.task.km || ''));
+    const d = T.d, id = T.id, task = findTask(d, id) || T.task;
+    S.timer = null; save(); stopTimerRuntime();
+    logSheet(d, task, { km, min });
+  },
+  't-cancel': () => { if (!confirm('Stop this workout without logging it?')) return; S.timer = null; save(); stopTimerRuntime(); render(); },
+  noop: () => {}
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]'); if (!el) return;
+  const f = A[el.dataset.a]; if (f) f(el, e);
+});
+
+/* keep "today" fresh if the app stays open past midnight */
+let lastDay = today();
+setInterval(() => { if (today() !== lastDay) { lastDay = today(); if (!S.timer) render(); } }, 30000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  if (S.timer && !S.timer.paused) wakeOn();
+  if (today() !== lastDay) { lastDay = today(); if (!S.timer) render(); }
+});
+
+render();
+if (S.timer) openTimer();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
